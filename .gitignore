@@ -1,0 +1,7 @@
+/.vscode
+/vendor/
+php_error*
+.php_cs.cache
+.phpunit.result.cache
+logs
+*.log
