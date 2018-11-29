@@ -88,9 +88,9 @@ class Statement extends PDOStatement
             $fetchMode = $this->fetchMode;
         }
 
-        $toLowercase     = ($this->getAttribute(PDO::ATTR_CASE) === PDO::CASE_LOWER);
-        $nullToString    = ($this->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_TO_STRING);
-        $nullEmptyString = ($this->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_EMPTY_STRING);
+        $toLowercase     = ($this->connection->getAttribute(PDO::ATTR_CASE) === PDO::CASE_LOWER);
+        $nullToString    = ($this->connection->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_TO_STRING);
+        $nullEmptyString = ($this->connection->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_EMPTY_STRING);
 
         switch ($fetchMode) {
             case PDO::FETCH_BOTH:
