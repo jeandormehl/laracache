@@ -63,4 +63,9 @@ class CacheStub extends Cache
     {
         return true;
     }
+
+    public function __destruct()
+    {
+        return true;
+    }
 }
