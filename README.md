@@ -1,5 +1,8 @@
 # InterSystems Caché provider for Laravel 5 (ODBC)
 
+[![Build Status](https://travis-ci.org/jeandormehl/laracache.svg?branch=master)](https://travis-ci.org/jeandormehl/laracache)
+![GitHub](https://img.shields.io/github/license/jeandormehl/laracache.svg)
+
 ## Laracaché
 
 Laracaché is an InterSystems Caché database driver package for [Laravel](http://laravel.com/). Laracaché is an extension of [Illuminate/Database](https://github.com/illuminate/database) that uses the [php-odbc](http://php.net/odbc) extension to communicate with Caché. This package plays well with [Eloquent](https://laravel.com/docs/master/eloquent).
@@ -88,7 +91,8 @@ sudo service php7.2-fpm restart
 ```
 
 ### InterSystems ODBC Drivers
-Download, untar and install. This example uses the 2018.1.0.184.0 build for Ubuntu 64bit. Find available drivers at this link: [ftp://ftp.intersys.com/pub/cache/odbc](ftp://ftp.intersys.com/pub/cache/odbc)
+Download, untar and install. This example uses the 2018.1.0.184.0 build for Ubuntu 64bit. Find available drivers at this link:
+[InterSystems ODBC Drivers](ftp://ftp.intersys.com/pub/cache/odbc)
 
 ```bash
 # download drivers
