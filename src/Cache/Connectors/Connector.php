@@ -49,7 +49,7 @@ class Connector extends IlluminateConnector implements
         $dsn  = 'Driver={' . $config['unix_driver'] . '};';
         $dsn .= 'Server=' . $config['host'] . ';';
         $dsn .= 'PORT=' . $config['port'] . ';';
-        $dsn .= 'DATABASE=' . $config['database'] . ';';
+        $dsn .= 'DATABASE=' . $config['database'];
 
         return $dsn;
     }
