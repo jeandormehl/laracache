@@ -4,7 +4,7 @@ php:
   - 7.1
   - 7.2
 
-before-script:
+before_script:
   - composer install --no-interaction
 
 script:
