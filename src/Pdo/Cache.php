@@ -33,7 +33,11 @@ class Cache extends PDO
      */
     public function __construct($dsn, $username, $password, array $options = [])
     {
-        // must call pdo constructor
+        if (\mb_substr($dsn, 0, 5) !== 'odbc:') {
+            $dsn = 'odbc:' . $dsn;
+        }
+
+        // must call pdo constructor - exception thrown
         parent::__construct($dsn, $username, $password, $options);
 
         $dsn           = \preg_replace('/^odbc:/', '', $dsn);

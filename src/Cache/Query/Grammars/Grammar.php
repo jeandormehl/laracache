@@ -22,15 +22,15 @@ class Grammar extends SqlServerGrammar
             $components['orders'] = 'order by 1';
         }
 
-        $components['columns'] = $this->compileOver($query->limit);
+        $components['columns'] = $this->compileOver('');
         $sql                   = $this->concatenate($components);
 
         return $this->compileTableExpression($sql, $query);
     }
 
-    protected function compileOver($limit)
+    protected function compileOver($orderings)
     {
-        return "select top {$limit} *";
+        return 'select top all *';
     }
 
     protected function compileTableExpression($sql, $query)

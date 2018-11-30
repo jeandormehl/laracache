@@ -505,7 +505,7 @@ class CacheQueryBuilderTest extends TestCase
         $builder->select('*')->from('users')->offset(5)->limit(10);
 
         $this->assertEquals(
-            'select *, %vid from (select top 10 * from users order by 1) where %vid between 6 and 15',
+            'select *, %vid from (select top all * from users order by 1) where %vid between 6 and 15',
             $builder->toSql()
         );
 
@@ -516,7 +516,7 @@ class CacheQueryBuilderTest extends TestCase
         $builder->select('*')->from('users')->skip(5)->take(10);
 
         $this->assertEquals(
-            'select *, %vid from (select top 10 * from users order by 1) where %vid between 6 and 15',
+            'select *, %vid from (select top all * from users order by 1) where %vid between 6 and 15',
             $builder->toSql()
         );
 
@@ -535,7 +535,7 @@ class CacheQueryBuilderTest extends TestCase
         $builder->select('*')->from('users')->forPage(2, 15);
 
         $this->assertEquals(
-            'select *, %vid from (select top 15 * from users order by 1) where %vid between 16 and 30',
+            'select *, %vid from (select top all * from users order by 1) where %vid between 16 and 30',
             $builder->toSql()
         );
 
@@ -571,7 +571,7 @@ class CacheQueryBuilderTest extends TestCase
         $builder->select('*')->from('users')->offset(1)->limit(1);
 
         $this->assertEquals(
-            'select *, %vid from (select top 1 * from users order by 1) where %vid between 2 and 2',
+            'select *, %vid from (select top all * from users order by 1) where %vid between 2 and 2',
             $builder->toSql()
         );
     }

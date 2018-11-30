@@ -21,6 +21,21 @@ Register Laracaché by editing `config/app.php`, find the providers key and add:
 Laracache\Cache\ServiceProvider::class
 ```
 
+## Environment variables
+
+Modify your .env file to look similar to this. Windows users only need set `DB_CONNECTION` and `DB_WIN_DSN` variables. Unix users should set all other variables as seen below:
+
+```conf
+DB_CONNECTION=isc
+DB_WIN_DSN=
+DB_UNIX_DRIVER=/usr/lib/intersystems/odbc/bin/libcacheodbcur6435.so
+DB_HOST=127.0.0.1
+DB_PORT=1972
+DB_DATABASE=LARAVEL
+DB_USERNAME=_SYSTEM
+DB_PASSWORD=SYS
+```
+
 ## Configuration
 
 Publish a configuration file by running the following Artisan command.
@@ -32,17 +47,19 @@ This will copy the configuration file to `config/isc.php`.
 
 ```php
 'isc' => [
-    'driver'   => 'odbc',
-    'dsn'      => env('DB_DSN', 'odbc:cache'), // 'odbc:' prefix is required
-    'host'     => env('DB_HOST', '127.0.0.1'), // intersystems cache server ip
-    'database' => env('DB_DATABASE', ''), // namespace
-    'username' => env('DB_USERNAME', ''),
-    'password' => env('DB_PASSWORD', ''),
-    'schema'   => env('DB_SCHEMA', 'SQLUser'), // SQLUser is default, avoid changing if possible (had some strange results)
-    'options'  => [
+    'driver'      => 'odbc',
+    'win_dsn'     => env('DB_WIN_DSN', ''),         // windows users only
+    'unix_driver' => env('DB_UNIX_DRIVER', ''),     // unix users only
+    'host'        => env('DB_HOST', ''),
+    'port'        => env('DB_PORT', 1972),
+    'database'    => env('DB_DATABASE', ''),        // namespace
+    'username'    => env('DB_USERNAME', '_SYSTEM'),
+    'password'    => env('DB_PASSWORD', 'SYS'),
+    'schema'      => env('DB_SCHEMA', 'SQLUser'),   // SQLUser is default, avoid changing if possible
+    'options'     => [
         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-        'processor' => \Laracache\Cache\Query\Processors\Processor::class,
-        'grammar' => [
+        'processor'                   => \Laracache\Cache\Query\Processors\Processor::class,
+        'grammar'                     => [
             'query'  => \Laracache\Cache\Query\Grammars\Grammar::class,
             'schema' => \Laracache\Cache\Schema\Grammars\Grammar::class,
         ],
@@ -135,7 +152,7 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libodbccr.so.2.0.0 /usr/lib/x86_64-linux-gn
 
 [ODBC Installation and Validation on UNIX® Systems](https://docs.intersystems.com/latest/csp/docbook/DocBook.UI.Page.cls?KEY=BGOD_unixinst)
 
-For Windows, setup the ODBC data source in Administrative Tools.
+For Windows, setup the ODBC data source in Administrative Tools and set the `win_dns` setting in the config file, `isc.php` to the name of your ODBC Data Source.
 
 ## Test
 Check out the [tests](https://github.com/jeandormehl/laracache/tree/master/tests) directory for grammar and connection tests.
