@@ -11,7 +11,7 @@ use Laracache\Cache\Schema\Grammars\Grammar as SchemaGrammar;
 
 class Connection extends IlluminateConnection
 {
-    public function table($table)
+    public function table($table, $as = null)
     {
         $processor = $this->getPostProcessor();
         $query     = new QueryBuilder($this, $this->getQueryGrammar(), $processor);
