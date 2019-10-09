@@ -11,7 +11,7 @@
     "odbc"
   ],
   "homepage": "https://github.com/jeandormehl/laracache",
-  "version": "1.0",
+  "version": "v1.0.1",
   "authors": [
     {
       "name": "Jean Dormehl",
@@ -20,8 +20,8 @@
   ],
   "require": {
     "php": "^7.1.3",
-    "illuminate/support": "~5.0|~6.0",
-    "illuminate/database": "~5.0|~6.0"
+    "illuminate/support": "^5.0|^6.0",
+    "illuminate/database": "^5.0|^6.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.13",
