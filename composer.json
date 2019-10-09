@@ -11,7 +11,7 @@
     "odbc"
   ],
   "homepage": "https://github.com/jeandormehl/laracache",
-  "version": "v1.0.1",
+  "version": "1.0.1",
   "authors": [
     {
       "name": "Jean Dormehl",
