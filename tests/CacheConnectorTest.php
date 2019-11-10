@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheConnectorTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheSchemaGrammarTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -480,7 +480,7 @@ class CacheSchemaGrammarTest extends TestCase
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
-            'alter table users add foo nvarchar(255) check ("foo" in (\'bar\', \'baz\')) not null',
+            "alter table users add foo nvarchar(255) check (\"foo\" in (N'bar', N'baz')) not null",
             $statements[0]
         );
     }
