@@ -68,7 +68,7 @@ This will copy the configuration file to `config/isc.php`.
 ```
 
 ## ODBC Drivers for Caché
-You will need to ensure that you have the relevant ODBC drivers installed. For Linux distributions I recommended using the unixODBC driver, in specific, **libcacheodbcur6435.so for 64-bit.
+You will need to ensure that you have the relevant ODBC drivers installed. For Linux distributions I recommended using the unixODBC driver, in specific, **`libcacheodbcur6435.so`** for 64-bit. If you have any trouble try to switch to **`libcacheodbcur64.so`**.
 
 ### unixODBC
 Download, untar and build the unixODBC package. This example uses version 2.3.7.
@@ -156,6 +156,10 @@ For Windows, setup the ODBC data source in Administrative Tools and set the `win
 
 ## Test
 Check out the [tests](https://github.com/jeandormehl/laracache/tree/master/tests) directory for grammar and connection tests.
+
+```bash
+./vendor/bin/phpunit ./tests
+```
 
 ## License
 
