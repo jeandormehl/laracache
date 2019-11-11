@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheQueryBuilderTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -248,7 +248,7 @@ class CacheQueryBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'select * from users where id = ? union select * from users where id = ?',
+            'select * from (select * from users where id = ?) as temp_table union select * from (select * from users where id = ?) as temp_table',
             $builder->toSql()
         );
         $this->assertEquals([0 => 1, 1 => 2], $builder->getBindings());
@@ -267,7 +267,7 @@ class CacheQueryBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'select * from users where id = ? union all select * from users where id = ?',
+            'select * from (select * from users where id = ?) as temp_table union all select * from (select * from users where id = ?) as temp_table',
             $builder->toSql()
         );
         $this->assertEquals([0 => 1, 1 => 2], $builder->getBindings());
@@ -288,7 +288,7 @@ class CacheQueryBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'select * from users where id = ? union select * from users where id = ? union select * from users where id = ?',
+            'select * from (select * from users where id = ?) as temp_table union select * from (select * from users where id = ?) as temp_table union select * from (select * from users where id = ?) as temp_table',
             $builder->toSql()
         );
         $this->assertEquals([0 => 1, 1 => 2, 2 => 3], $builder->getBindings());
@@ -308,7 +308,7 @@ class CacheQueryBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            'select * from users where id = ? union all select * from users where id = ? union all select * from users where id = ?',
+            'select * from (select * from users where id = ?) as temp_table union all select * from (select * from users where id = ?) as temp_table union all select * from (select * from users where id = ?) as temp_table',
             $builder->toSql()
         );
         $this->assertEquals([0 => 1, 1 => 2, 2 => 3], $builder->getBindings());

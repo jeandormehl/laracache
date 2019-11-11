@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheEloquentTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -73,5 +73,4 @@ class CacheEloquentTest extends TestCase
 }
 
 class CacheEloquentStub extends Model
-{
-}
+{ }

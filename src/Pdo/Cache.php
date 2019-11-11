@@ -156,8 +156,8 @@ class Cache extends PDO
     {
         $this->dbh = (\array_key_exists(PDO::ATTR_PERSISTENT, $options)
             && $options[PDO::ATTR_PERSISTENT])
-                ? @\odbc_pconnect($dsn, $username, $password)
-                : @\odbc_connect($dsn, $username, $password);
+            ? @\odbc_pconnect($dsn, $username, $password)
+            : @\odbc_connect($dsn, $username, $password);
 
         if (!$this->dbh) {
             $this->throwException();
