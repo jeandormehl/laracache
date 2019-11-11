@@ -1,7 +1,10 @@
-# InterSystems Caché provider for Laravel 5 (ODBC)
+# InterSystems Caché provider for Laravel 5 & 6 (ODBC)
 
-[![Build Status](https://travis-ci.org/jeandormehl/laracache.svg?branch=master)](https://travis-ci.org/jeandormehl/laracache)
-![GitHub](https://img.shields.io/github/license/jeandormehl/laracache.svg)
+<img src="https://img.shields.io/packagist/l/jeandormehl/laracache" /> &nbsp;
+<img src="https://img.shields.io/travis/jeandormehl/laracache" />  &nbsp;
+<img src="https://img.shields.io/packagist/v/jeandormehl/laracache.svg" />  &nbsp;
+<img src="https://img.shields.io/packagist/dt/jeandormehl/laracache.svg" />  &nbsp;
+
 
 ## Laracaché
 
