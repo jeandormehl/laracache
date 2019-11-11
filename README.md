@@ -158,7 +158,7 @@ For Windows, setup the ODBC data source in Administrative Tools and set the `win
 Check out the [tests](https://github.com/jeandormehl/laracache/tree/master/tests) directory for grammar and connection tests.
 
 ```bash
-./vendor/bin/phpunit ./tests
+./vendor/bin/phpunit
 ```
 
 ## License
