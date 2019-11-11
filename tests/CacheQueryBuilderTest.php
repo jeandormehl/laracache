@@ -254,6 +254,25 @@ class CacheQueryBuilderTest extends TestCase
         $this->assertEquals([0 => 1, 1 => 2], $builder->getBindings());
     }
 
+    public function testUnionsWithCustomSelect()
+    {
+        $builder = $this->getBuilder();
+
+        $builder->select(['name', 'email'])
+            ->from('users')
+            ->where('id', '=', 1);
+
+        $builder->union(
+            $this->getBuilder()->select(['name', 'email'])->from('users')->where('id', '=', 2)
+        );
+
+        $this->assertEquals(
+            'select * from (select name, email from users where id = ?) as temp_table union select * from (select name, email from users where id = ?) as temp_table',
+            $builder->toSql()
+        );
+        $this->assertEquals([0 => 1, 1 => 2], $builder->getBindings());
+    }
+
     public function testUnionAlls()
     {
         $builder = $this->getBuilder();
@@ -268,6 +287,25 @@ class CacheQueryBuilderTest extends TestCase
 
         $this->assertEquals(
             'select * from (select * from users where id = ?) as temp_table union all select * from (select * from users where id = ?) as temp_table',
+            $builder->toSql()
+        );
+        $this->assertEquals([0 => 1, 1 => 2], $builder->getBindings());
+    }
+
+    public function testUnionAllsWithCustomSelect()
+    {
+        $builder = $this->getBuilder();
+
+        $builder->select(['name', 'email'])
+            ->from('users')
+            ->where('id', '=', 1);
+
+        $builder->unionAll(
+            $this->getBuilder()->select(['name', 'email'])->from('users')->where('id', '=', 2)
+        );
+
+        $this->assertEquals(
+            'select * from (select name, email from users where id = ?) as temp_table union all select * from (select name, email from users where id = ?) as temp_table',
             $builder->toSql()
         );
         $this->assertEquals([0 => 1, 1 => 2], $builder->getBindings());
@@ -294,6 +332,27 @@ class CacheQueryBuilderTest extends TestCase
         $this->assertEquals([0 => 1, 1 => 2, 2 => 3], $builder->getBindings());
     }
 
+    public function testMultipleUnionsWithCustomSelect()
+    {
+        $builder = $this->getBuilder();
+
+        $builder->select(['name', 'email'])->from('users')->where('id', '=', 1);
+
+        $builder->union(
+            $this->getBuilder()->select(['name', 'email'])->from('users')->where('id', '=', 2)
+        );
+
+        $builder->union(
+            $this->getBuilder()->select(['name', 'email'])->from('users')->where('id', '=', 3)
+        );
+
+        $this->assertEquals(
+            'select * from (select name, email from users where id = ?) as temp_table union select * from (select name, email from users where id = ?) as temp_table union select * from (select name, email from users where id = ?) as temp_table',
+            $builder->toSql()
+        );
+        $this->assertEquals([0 => 1, 1 => 2, 2 => 3], $builder->getBindings());
+    }
+
     public function testMultipleUnionAlls()
     {
         $builder = $this->getBuilder();
@@ -309,6 +368,26 @@ class CacheQueryBuilderTest extends TestCase
 
         $this->assertEquals(
             'select * from (select * from users where id = ?) as temp_table union all select * from (select * from users where id = ?) as temp_table union all select * from (select * from users where id = ?) as temp_table',
+            $builder->toSql()
+        );
+        $this->assertEquals([0 => 1, 1 => 2, 2 => 3], $builder->getBindings());
+    }
+
+    public function testMultipleUnionAllsWithCustomSelect()
+    {
+        $builder = $this->getBuilder();
+
+        $builder->select(['name', 'email'])->from('users')->where('id', '=', 1);
+
+        $builder->unionAll(
+            $this->getBuilder()->select(['name', 'email'])->from('users')->where('id', '=', 2)
+        );
+        $builder->unionAll(
+            $this->getBuilder()->select(['name', 'email'])->from('users')->where('id', '=', 3)
+        );
+
+        $this->assertEquals(
+            'select * from (select name, email from users where id = ?) as temp_table union all select * from (select name, email from users where id = ?) as temp_table union all select * from (select name, email from users where id = ?) as temp_table',
             $builder->toSql()
         );
         $this->assertEquals([0 => 1, 1 => 2, 2 => 3], $builder->getBindings());
@@ -496,6 +575,20 @@ class CacheQueryBuilderTest extends TestCase
         );
     }
 
+    public function testOffsetWithCustomSelect()
+    {
+        $builder    = $this->getBuilder();
+        $connection = $builder->getConnection();
+
+        $connection->shouldReceive('getConfig')->andReturn('');
+        $builder->select(['name', 'email'])->from('users')->offset(10);
+
+        $this->assertEquals(
+            'select *, %vid from (select top all name, email from users order by 1) where %vid >= 11',
+            $builder->toSql()
+        );
+    }
+
     public function testLimitsAndOffsets()
     {
         $builder    = $this->getBuilder();
@@ -551,6 +644,20 @@ class CacheQueryBuilderTest extends TestCase
         );
     }
 
+    public function testLimitsAndOffsetsWithCustomSelect()
+    {
+        $builder    = $this->getBuilder();
+        $connection = $builder->getConnection();
+
+        $connection->shouldReceive('getConfig')->andReturn('');
+        $builder->select(['name', 'email'])->from('users')->offset(5)->limit(10);
+
+        $this->assertEquals(
+            'select *, %vid from (select top all name, email from users order by 1) where %vid between 6 and 15',
+            $builder->toSql()
+        );
+    }
+
     public function testLimitAndOffsetToPaginateOne()
     {
         $builder    = $this->getBuilder();
@@ -572,6 +679,31 @@ class CacheQueryBuilderTest extends TestCase
 
         $this->assertEquals(
             'select *, %vid from (select top all * from users order by 1) where %vid between 2 and 2',
+            $builder->toSql()
+        );
+    }
+
+    public function testLimitAndOffsetToPaginateOneWithCustomSelect()
+    {
+        $builder    = $this->getBuilder();
+        $connection = $builder->getConnection();
+
+        $connection->shouldReceive('getConfig')->andReturn('');
+        $builder->select(['name', 'email'])->from('users')->offset(0)->limit(1);
+
+        $this->assertEquals(
+            'select top 1 name, email from users',
+            $builder->toSql()
+        );
+
+        $builder    = $this->getBuilder();
+        $connection = $builder->getConnection();
+
+        $connection->shouldReceive('getConfig')->andReturn('');
+        $builder->select(['name', 'email'])->from('users')->offset(1)->limit(1);
+
+        $this->assertEquals(
+            'select *, %vid from (select top all name, email from users order by 1) where %vid between 2 and 2',
             $builder->toSql()
         );
     }
