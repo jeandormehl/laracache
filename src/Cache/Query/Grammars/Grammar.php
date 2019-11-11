@@ -22,7 +22,7 @@ class Grammar extends SqlServerGrammar
             $components['orders'] = 'order by 1';
         }
 
-        $components['columns'] = $this->compileOver('');
+        $components['columns'] = $this->compileOver($this->columnize($query->columns));
         $sql                   = $this->concatenate($components);
 
         return $this->compileTableExpression($sql, $query);
@@ -30,7 +30,7 @@ class Grammar extends SqlServerGrammar
 
     protected function compileOver($orderings)
     {
-        return 'select top all *';
+        return "select top all {$orderings}";
     }
 
     protected function compileTableExpression($sql, $query)
