@@ -47,14 +47,6 @@ class Cache extends PDO
     }
 
     /**
-     * Destructor.
-     */
-    public function __destruct()
-    {
-        return @\odbc_close($this->dbh);
-    }
-
-    /**
      * Prepares a statement for execution and returns a statement object.
      *
      * @param string $statement
