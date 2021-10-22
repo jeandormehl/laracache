@@ -155,16 +155,20 @@ class Statement extends PDOStatement
      *
      * @return array
      */
-    public function fetchAll(int $mode = PDO::FETCH_OBJ, mixed ...$args)
+    public function fetchAll($fetchMode = null, $fetchArgument = null, $ctorArgs = [])
     {
-        $this->setFetchMode($mode);
+        if (\is_null($fetchMode)) {
+            $fetchMode = $this->fetchMode;
+        }
+
+        $this->setFetchMode($fetchMode, $fetchArgument, $ctorArgs);
         $this->results = [];
 
         while ($row = $this->fetch()) {
             if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($row))) {
                 $stmt = new self($this->connection, \reset($row), $this->options);
                 $stmt->execute();
-                $stmt->setFetchMode($mode);
+                $stmt->setFetchMode($fetchMode, $fetchArgument, $ctorArgs);
 
                 while ($rs = $stmt->fetch()) {
                     $this->results[] = $rs;
@@ -200,13 +204,13 @@ class Statement extends PDOStatement
      *
      * @return bool
      */
-    public function setFetchMode(int $mode, mixed ...$args)
+    public function setFetchMode($fetchMode, $modeArg = null, $ctorArgs = [])
     {
-        switch ($mode) {
+        switch ($fetchMode) {
             case PDO::FETCH_ASSOC:
             case PDO::FETCH_BOTH:
             case PDO::FETCH_OBJ:
-                $this->fetchMode = $mode;
+                $this->fetchMode = $fetchMode;
 
                 break;
             default:
