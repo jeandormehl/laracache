@@ -165,6 +165,14 @@ class Cache extends PDO
         $this->inTransaction = !$boolean;
     }
 
+     /**
+     * Required quote function.
+     */
+    public function quote(string $string, int $type = PDO::PARAM_STR)
+    {
+        return $string;
+    }
+
     /**
      * Throws an odbc exception object.
      *
