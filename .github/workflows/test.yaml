@@ -1,0 +1,32 @@
+name: Test package
+
+on: [push, pull_request]
+
+jobs:
+  php-build:
+    name: Test with PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [7.4]
+        laravel: [8.*]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-suggest --ansi
+
+      - name: Execute tests
+        run: ./vendor/bin/phpunit
