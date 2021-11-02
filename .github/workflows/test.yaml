@@ -11,11 +11,16 @@ jobs:
         php: [8.0, 8.1]
         laravel: [8.*,7.*]       
         dependency-version: [prefer-lowest, prefer-stable]          
+        # Adjust testbench version according to Laravel version
         include:
           - laravel: 8.*
             testbench: ^6.3
           - laravel: 7.*
             testbench: ^5.8
+        # Grammar of Laravel 7 is not compatible with Laravel 8
+        exclude:
+          - php: 8.x
+            laravel: 7.x
 
     steps:
       - name: Checkout code
