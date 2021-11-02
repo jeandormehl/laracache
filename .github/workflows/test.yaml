@@ -9,16 +9,7 @@ jobs:
     strategy:
       matrix:
         php: [7.4, 8.0]
-        laravel: [7.*, 8.*]
-        include:
-          - laravel: 8.*
-            database: ^8.0
-            support: ^8.0
-            testbench: ^6.3            
-          - laravel: 7.*
-            database: ^7.0
-            support: ^7.0
-            testbench: ^5.8
+        laravel: [7.*, 8.*]       
 
     steps:
       - name: Checkout code
