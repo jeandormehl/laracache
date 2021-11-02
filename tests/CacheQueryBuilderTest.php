@@ -14,6 +14,18 @@ class CacheQueryBuilderTest extends TestCase
         m::close();
     }
 
+    protected function getBuilder()
+    {
+        $grammar   = new Grammar();
+        $processor = m::mock(Processor::class);
+
+        return new Builder(
+            m::mock(Illuminate\Database\ConnectionInterface::class),
+            $grammar,
+            $processor
+        );
+    }
+
     public function testBasicSelect()
     {
         $builder = $this->getBuilder();
@@ -395,9 +407,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testSubSelectWhereIns()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
-        $connection->shouldReceive('getConfig')->andReturn('');
+        $builder = $this->getBuilder();
+        $builder->getConnection()->shouldReceive('getDatabaseName')->andReturn('');
 
         $builder->select('*')
             ->from('users')
@@ -411,9 +422,8 @@ class CacheQueryBuilderTest extends TestCase
         );
         $this->assertEquals([25], $builder->getBindings());
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
-        $connection->shouldReceive('getConfig')->andReturn('');
+        $builder = $this->getBuilder();
+        $builder->getConnection()->shouldReceive('getDatabaseName')->andReturn('');
 
         $builder->select('*')->from('users')->whereNotIn('id', function ($q) {
             $q->select('id')->from('users')->where('age', '>', 25)->take(3);
@@ -563,10 +573,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testOffset()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->offset(10);
 
         $this->assertEquals(
@@ -577,10 +585,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testOffsetWithCustomSelect()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select(['name', 'email'])->from('users')->offset(10);
 
         $this->assertEquals(
@@ -591,10 +597,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testLimitsAndOffsets()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->offset(5)->limit(10);
 
         $this->assertEquals(
@@ -602,10 +606,8 @@ class CacheQueryBuilderTest extends TestCase
             $builder->toSql()
         );
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->skip(5)->take(10);
 
         $this->assertEquals(
@@ -613,18 +615,14 @@ class CacheQueryBuilderTest extends TestCase
             $builder->toSql()
         );
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->skip(-5)->take(10);
 
         $this->assertEquals('select top 10 * from users', $builder->toSql());
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->forPage(2, 15);
 
         $this->assertEquals(
@@ -632,10 +630,8 @@ class CacheQueryBuilderTest extends TestCase
             $builder->toSql()
         );
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->forPage(-2, 15);
 
         $this->assertEquals(
@@ -646,10 +642,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testLimitsAndOffsetsWithCustomSelect()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select(['name', 'email'])->from('users')->offset(5)->limit(10);
 
         $this->assertEquals(
@@ -660,10 +654,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testLimitAndOffsetToPaginateOne()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->offset(0)->limit(1);
 
         $this->assertEquals(
@@ -671,10 +663,8 @@ class CacheQueryBuilderTest extends TestCase
             $builder->toSql()
         );
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select('*')->from('users')->offset(1)->limit(1);
 
         $this->assertEquals(
@@ -685,10 +675,8 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testLimitAndOffsetToPaginateOneWithCustomSelect()
     {
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select(['name', 'email'])->from('users')->offset(0)->limit(1);
 
         $this->assertEquals(
@@ -696,10 +684,8 @@ class CacheQueryBuilderTest extends TestCase
             $builder->toSql()
         );
 
-        $builder    = $this->getBuilder();
-        $connection = $builder->getConnection();
+        $builder = $this->getBuilder();
 
-        $connection->shouldReceive('getConfig')->andReturn('');
         $builder->select(['name', 'email'])->from('users')->offset(1)->limit(1);
 
         $this->assertEquals(
@@ -756,6 +742,7 @@ class CacheQueryBuilderTest extends TestCase
             'select * from users where email = ? or id = (select max(id) from users where email = ?)',
             $builder->toSql()
         );
+
         $this->assertEquals([0 => 'foo', 1 => 'bar'], $builder->getBindings());
     }
 
@@ -1172,17 +1159,5 @@ class CacheQueryBuilderTest extends TestCase
         $builder->shouldReceive('where')->with('qux', '=', $parameters[2], 'or')->once()->andReturn($builder);
 
         $this->assertEquals($builder, $builder->dynamicWhere($method, $parameters));
-    }
-
-    protected function getBuilder()
-    {
-        $grammar   = new Grammar();
-        $processor = m::mock(Processor::class);
-
-        return new Builder(
-            m::mock(Illuminate\Database\ConnectionInterface::class),
-            $grammar,
-            $processor
-        );
     }
 }

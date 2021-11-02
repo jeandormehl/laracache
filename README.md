@@ -1,4 +1,4 @@
-# InterSystems Caché provider for Laravel 5 & 6 (ODBC)
+# InterSystems Caché provider for Laravel (ODBC)
 
 <p>
   <img src="https://img.shields.io/packagist/l/jeandormehl/laracache" /> 
