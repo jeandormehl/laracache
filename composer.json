@@ -18,8 +18,8 @@
   ],
   "require": {
     "php": "^8.0|^8.1",
-    "illuminate/database": "^8.0",
-    "illuminate/support": "^8.0"
+    "illuminate/database": "^7.0|^8.0",
+    "illuminate/support": "^7.0|^8.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.16",
