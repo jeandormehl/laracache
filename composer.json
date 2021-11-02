@@ -1,7 +1,7 @@
 {
   "name": "jeandormehl/laracache",
   "license": "MIT",
-  "description": "InterSystems Cache support for Laravel 5 using ODBC",
+  "description": "InterSystems Caché provider for Laravel (ODBC)",
   "keywords": [
     "laravel",
     "intersystems",

@@ -14,6 +14,18 @@ class CacheQueryBuilderTest extends TestCase
         m::close();
     }
 
+    protected function getBuilder()
+    {
+        $grammar   = new Grammar();
+        $processor = m::mock(Processor::class);
+
+        return new Builder(
+            m::mock(Illuminate\Database\ConnectionInterface::class),
+            $grammar,
+            $processor
+        );
+    }
+
     public function testBasicSelect()
     {
         $builder = $this->getBuilder();
@@ -1149,17 +1161,5 @@ class CacheQueryBuilderTest extends TestCase
         $builder->shouldReceive('where')->with('qux', '=', $parameters[2], 'or')->once()->andReturn($builder);
 
         $this->assertEquals($builder, $builder->dynamicWhere($method, $parameters));
-    }
-
-    protected function getBuilder()
-    {
-        $grammar   = new Grammar();
-        $processor = m::mock(Processor::class);
-
-        return new Builder(
-            m::mock(Illuminate\Database\ConnectionInterface::class),
-            $grammar,
-            $processor
-        );
-    }
+    }    
 }
