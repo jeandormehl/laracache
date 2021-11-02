@@ -574,7 +574,6 @@ class CacheQueryBuilderTest extends TestCase
     public function testOffset()
     {
         $builder = $this->getBuilder();
-        $builder->getConnection()->shouldReceive('getConfig')->andReturn('');
 
         $builder->select('*')->from('users')->offset(10);
 
@@ -587,7 +586,6 @@ class CacheQueryBuilderTest extends TestCase
     public function testOffsetWithCustomSelect()
     {
         $builder = $this->getBuilder();
-        $builder->getConnection()->shouldReceive('getConfig')->andReturn('');
 
         $builder->select(['name', 'email'])->from('users')->offset(10);
 
@@ -1161,5 +1159,5 @@ class CacheQueryBuilderTest extends TestCase
         $builder->shouldReceive('where')->with('qux', '=', $parameters[2], 'or')->once()->andReturn($builder);
 
         $this->assertEquals($builder, $builder->dynamicWhere($method, $parameters));
-    }    
+    }
 }
