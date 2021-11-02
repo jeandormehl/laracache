@@ -3,7 +3,7 @@ name: Test package
 on: [push, pull_request]
 
 jobs:
-  php-build:
+  build-and-test:
     name: Test with PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
     runs-on: ubuntu-latest
     strategy:
@@ -33,6 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          composer install --prefer-dist --no-suggest --ansi
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer require --dev "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
 
