@@ -17,10 +17,13 @@ jobs:
             testbench: ^6.3
           - laravel: 7.*
             testbench: ^5.8
-        # Grammar of Laravel 7 is not compatible with Laravel 8
+        # SQL Grammar of Laravel 7 is not compatible with PHP 8 (operand types )
+        # https://github.com/laravel/framework/blob/7.x/src/Illuminate/Database/Query/Grammars/SqlServerGrammar.php#L223-L234
         exclude:
-          - php: 8.x
-            laravel: 7.x
+          - php: 8.0      
+            laravel: 7.*
+          - php: 8.1      
+            laravel: 7.*
 
     steps:
       - name: Checkout code
