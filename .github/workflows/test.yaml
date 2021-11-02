@@ -4,14 +4,13 @@ on: [push, pull_request]
 
 jobs:
   build-and-test:
-    name: Test with PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} 
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php: [7.4]
         laravel: [7.*, 8.*]       
-        dependency-version: [prefer-lowest, prefer-stable]  
-        name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} 
+        dependency-version: [prefer-lowest, prefer-stable]          
 
     steps:
       - name: Checkout code
