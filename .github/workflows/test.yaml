@@ -10,9 +10,8 @@ jobs:
       matrix:
         php: [7.4]
         laravel: [7.*, 8.*]       
-        dependency-version: [prefer-lowest, prefer-stable]
-    
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} 
+        dependency-version: [prefer-lowest, prefer-stable]  
+        name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} 
 
     steps:
       - name: Checkout code
