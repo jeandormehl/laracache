@@ -37,4 +37,4 @@ jobs:
           composer require --dev "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
 
       - name: Execute tests
-        run: ./vendor/bin/phpunit
+        run: vendor/bin/phpunit
