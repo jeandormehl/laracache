@@ -9,21 +9,11 @@ jobs:
     strategy:
       matrix:
         php: [8.0, 8.1]
-        laravel: [8.*,7.*]       
+        laravel: [8.*]       
         dependency-version: [prefer-lowest, prefer-stable]          
-        # Adjust testbench version according to Laravel version
         include:
           - laravel: 8.*
-            testbench: ^6.3
-          - laravel: 7.*
-            testbench: ^5.8
-        # SQL Grammar of Laravel 7 is not compatible with PHP 8 (operand types )
-        # https://github.com/laravel/framework/blob/7.x/src/Illuminate/Database/Query/Grammars/SqlServerGrammar.php#L223-L234
-        exclude:
-          - php: 8.0      
-            laravel: 7.*
-          - php: 8.1      
-            laravel: 7.*
+            testbench: ^6.3        
 
     steps:
       - name: Checkout code
