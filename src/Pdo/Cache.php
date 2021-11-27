@@ -5,6 +5,7 @@ namespace Laracache\Pdo;
 use Laracache\Pdo\Cache\Exceptions\CacheException;
 use Laracache\Pdo\Cache\Statement;
 use PDO;
+use PDOStatement;
 
 class Cache extends PDO
 {
@@ -34,13 +35,13 @@ class Cache extends PDO
     public function __construct($dsn, $username, $password, array $options = [])
     {
         if (\mb_substr($dsn, 0, 5) !== 'odbc:') {
-            $dsn = 'odbc:' . $dsn;
+            $dsn = 'odbc:'.$dsn;
         }
 
         // must call pdo constructor - exception thrown
         parent::__construct($dsn, $username, $password, $options);
 
-        $dsn           = \preg_replace('/^odbc:/', '', $dsn);
+        $dsn = \preg_replace('/^odbc:/', '', $dsn);
         $this->options = $options;
 
         $this->connect($dsn, $username, $password, $options);
@@ -54,7 +55,7 @@ class Cache extends PDO
      *
      * @return Statement
      */
-    public function prepare($statement, $options = null)
+    public function prepare($statement, $options = null): PDOStatement|false
     {
         $options = ($options === null)
             ? $this->options
@@ -74,7 +75,7 @@ class Cache extends PDO
      *
      * @return int
      */
-    public function exec($statement)
+    public function exec($statement): int
     {
         return $this->prepare($statement)->execute();
     }
@@ -84,7 +85,7 @@ class Cache extends PDO
      *
      * @return bool
      */
-    public function beginTransaction()
+    public function beginTransaction(): bool
     {
         return $this->setAutoCommit(false);
     }
@@ -94,7 +95,7 @@ class Cache extends PDO
      *
      * @return bool
      */
-    public function commit()
+    public function commit(): bool
     {
         $this->setAutoCommit(true);
 
@@ -108,7 +109,7 @@ class Cache extends PDO
      *
      * @return bool
      */
-    public function rollBack()
+    public function rollBack(): bool
     {
         $status = @\odbc_rollback($this->dbh);
 
@@ -126,7 +127,7 @@ class Cache extends PDO
      *
      * @return bool
      */
-    public function inTransaction()
+    public function inTransaction(): bool
     {
         return $this->inTransaction;
     }
@@ -159,16 +160,18 @@ class Cache extends PDO
     /**
      * Set the odbc_autocommit value.
      */
-    private function setAutoCommit($boolean = true)
+    private function setAutoCommit($boolean = true): bool
     {
         @\odbc_autocommit($this->dbh, $boolean);
         $this->inTransaction = !$boolean;
+
+        return $boolean;
     }
 
-     /**
-     * Required quote function.
-     */
-    public function quote(string $string, int $type = PDO::PARAM_STR)
+    /**
+    * Required quote function.
+    */
+    public function quote(string $string, int $type = PDO::PARAM_STR): string|false
     {
         return $string;
     }
