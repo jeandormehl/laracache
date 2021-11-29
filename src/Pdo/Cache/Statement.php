@@ -31,7 +31,7 @@ class Statement extends PDOStatement
     {
         $this->connection = $connection;
         $this->parameters = $this->parameters($statement);
-        $this->statement  = @\odbc_prepare(
+        $this->statement = @\odbc_prepare(
             $dbh,
             \preg_replace('/(?<=\s|^):[^\s:]++/um', '?', $statement)
         );
@@ -43,7 +43,7 @@ class Statement extends PDOStatement
         if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
             throw new CacheException(
                 'Resource expected of type odbc result; '
-                . (string) \get_resource_type($this->statement) . ' received instead.'
+                .(string) \get_resource_type($this->statement).' received instead.'
             );
         }
 
@@ -61,9 +61,9 @@ class Statement extends PDOStatement
      *
      * @return bool
      */
-    public function execute($inputParameters = null)
+    public function execute($inputParameters = null): bool
     {
-        $result           = @\odbc_execute($this->statement, $this->parameters);
+        $result = @\odbc_execute($this->statement, $this->parameters);
         $this->parameters = [];
 
         if (\odbc_error()) {
@@ -82,14 +82,14 @@ class Statement extends PDOStatement
      *
      * @return mixed
      */
-    public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0)
+    public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0): mixed
     {
         if ($fetchMode === null) {
             $fetchMode = $this->fetchMode;
         }
 
-        $toLowercase     = ($this->connection->getAttribute(PDO::ATTR_CASE) === PDO::CASE_LOWER);
-        $nullToString    = ($this->connection->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_TO_STRING);
+        $toLowercase = ($this->connection->getAttribute(PDO::ATTR_CASE) === PDO::CASE_LOWER);
+        $nullToString = ($this->connection->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_TO_STRING);
         $nullEmptyString = ($this->connection->getAttribute(PDO::ATTR_ORACLE_NULLS) === PDO::NULL_EMPTY_STRING);
 
         switch ($fetchMode) {
@@ -155,7 +155,7 @@ class Statement extends PDOStatement
      *
      * @return array
      */
-    public function fetchAll(int $mode = PDO::FETCH_OBJ, mixed ...$args)
+    public function fetchAll(int $mode = PDO::FETCH_OBJ, mixed ...$args): array
     {
         $this->setFetchMode($mode);
         $this->results = [];
@@ -180,9 +180,11 @@ class Statement extends PDOStatement
     /**
      * Bind value to statement.
      */
-    public function bindValue($parameter, $value, $dataType = null)
+    public function bindValue($parameter, $value, $dataType = null): bool
     {
         $this->parameters[$parameter] = $value;
+
+        return true;
     }
 
     /**
@@ -190,7 +192,7 @@ class Statement extends PDOStatement
      *
      * @return int
      */
-    public function rowCount()
+    public function rowCount(): int
     {
         return \odbc_num_rows($this->statement);
     }
@@ -224,8 +226,8 @@ class Statement extends PDOStatement
     private function parameters($statement)
     {
         $parameters = [];
-        $values     = \explode(' ', $statement);
-        $count      = 0;
+        $values = \explode(' ', $statement);
+        $count = 0;
 
         while (\array_key_exists($count, $values)) {
             if (\preg_match('/^:/', $values[$count])) {
