@@ -39,4 +39,32 @@ class Grammar extends SqlServerGrammar
 
         return "select *, %vid from ({$sql}) where %vid {$constraint}";
     }
+    
+     /**
+     *
+     *  This is a compatible method that usually worked with old version of SqlServerGramar.
+     *
+     *  This PR introduced a braking change, once Laravel now supports only SQLServer 2017+
+     *  https://github.com/laravel/framework/pull/39863 (see changed files)
+     *
+     *  Just copied over old method, before Laravel PR got merged.
+     * 
+     **/
+     public function compileSelect(Builder $query)
+     {
+         if (! $query->offset) {
+              return parent::compileSelect($query);
+          }
+
+          // If an offset is present on the query, we will need to wrap the query in
+          // a big "ANSI" offset syntax block. This is very nasty compared to the
+          // other database systems but is necessary for implementing features.
+          if (is_null($query->columns)) {
+              $query->columns = ['*'];
+          }
+
+          return $this->compileAnsiOffset(
+              $query, $this->compileComponents($query)
+          );
+    }
 }
