@@ -167,11 +167,14 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libodbccr.so.2.0.0 /usr/lib/x86_64-linux-gn
 
 For Windows, setup the ODBC data source in Administrative Tools and set the `win_dns` setting in the config file, `isc.php` to the name of your ODBC Data Source.
 
-## Test
-Check out the [tests](https://github.com/jeandormehl/laracache/tree/master/tests) directory for grammar and connection tests.
+# Contribute
+
+You can run this project on VSCODE with Remote Container. Make sure you will use internal VSCODE terminal (inside running container).
 
 ```bash
-./vendor/bin/phpunit
+composer install
+composer test
+composer test:coverage
 ```
 
 ## License
