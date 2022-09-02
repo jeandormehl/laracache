@@ -2,7 +2,8 @@
 
 <p>
   <img src="https://img.shields.io/packagist/l/jeandormehl/laracache" /> 
-  <img src="https://img.shields.io/travis/jeandormehl/laracache" /> 
+  <img src="https://codecov.io/gh/jeandormehl/laracache/branch/master/graph/badge.svg"/>
+  </a>
   <img src="https://img.shields.io/packagist/v/jeandormehl/laracache.svg" /> 
   <img src="https://img.shields.io/packagist/dt/jeandormehl/laracache.svg" /> 
 </p>
@@ -16,22 +17,6 @@ Laracaché is an InterSystems Caché database driver package for [Laravel](http:
 PHP >= 8 and Laravel >= 8
 ```bash
 composer require jeandormehl/laracache
-```
-
-PHP <= 7.4 and Laravel <= 7
-
-```bash
-# PHP 7.4 and Laravel 7 support will be dropped soon
-
-composer require "jeandormehl/laracache:^1.0"
-```
-
-## Service Provider (Optional on Laravel 5.5+)
-
-Register Laracaché by editing `config/app.php`, find the providers key and add:
-
-```php
-Laracache\Cache\ServiceProvider::class
 ```
 
 ## Environment variables
