@@ -15,7 +15,7 @@ class Grammar extends SqlServerGrammar
 
         if (config('database.connections.odbc.schema')) {
             $sql .= ' and table_schema = \''
-                . config('database.connections.odbc.schema') . '\'';
+                .config('database.connections.odbc.schema').'\'';
         }
 
         return $sql;

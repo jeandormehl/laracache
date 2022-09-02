@@ -36,7 +36,7 @@ class Builder extends IlluminateBuilder
 
             $this->connection
                 ->getPdo()
-                ->exec(DB::raw('drop table ' . $tableName));
+                ->exec(DB::raw('drop table '.$tableName));
         }
 
         $this->connection->getPdo()->commit();

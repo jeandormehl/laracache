@@ -84,7 +84,7 @@ class CacheSchemaGrammarTest extends TestCase
         $blueprint->foreign('foo_id')->references('id')->on('orders');
 
         $grammar = $this->getGrammar();
-        $conn    = $this->getConnection();
+        $conn = $this->getConnection();
 
         $statements = $blueprint->toSql($conn, $grammar);
 
@@ -132,7 +132,7 @@ class CacheSchemaGrammarTest extends TestCase
         $blueprint->string('email');
         $blueprint->primary('id');
 
-        $conn       = $this->getConnection();
+        $conn = $this->getConnection();
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
         $this->assertEquals(2, \count($statements));
