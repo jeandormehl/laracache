@@ -2,7 +2,8 @@
 
 <p>
   <img src="https://img.shields.io/packagist/l/jeandormehl/laracache" /> 
-  <img src="https://img.shields.io/travis/jeandormehl/laracache" /> 
+  <img src="https://codecov.io/gh/jeandormehl/laracache/branch/master/graph/badge.svg"/>
+  </a>
   <img src="https://img.shields.io/packagist/v/jeandormehl/laracache.svg" /> 
   <img src="https://img.shields.io/packagist/dt/jeandormehl/laracache.svg" /> 
 </p>
@@ -16,22 +17,6 @@ Laracaché is an InterSystems Caché database driver package for [Laravel](http:
 PHP >= 8 and Laravel >= 8
 ```bash
 composer require jeandormehl/laracache
-```
-
-PHP <= 7.4 and Laravel <= 7
-
-```bash
-# PHP 7.4 and Laravel 7 support will be dropped soon
-
-composer require "jeandormehl/laracache:^1.0"
-```
-
-## Service Provider (Optional on Laravel 5.5+)
-
-Register Laracaché by editing `config/app.php`, find the providers key and add:
-
-```php
-Laracache\Cache\ServiceProvider::class
 ```
 
 ## Environment variables
@@ -167,11 +152,14 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libodbccr.so.2.0.0 /usr/lib/x86_64-linux-gn
 
 For Windows, setup the ODBC data source in Administrative Tools and set the `win_dns` setting in the config file, `isc.php` to the name of your ODBC Data Source.
 
-## Test
-Check out the [tests](https://github.com/jeandormehl/laracache/tree/master/tests) directory for grammar and connection tests.
+# Contribute
+
+You can run this project on VSCODE with Remote Container. Make sure you will use internal VSCODE terminal (inside running container).
 
 ```bash
-./vendor/bin/phpunit
+composer install
+composer test
+composer test:coverage
 ```
 
 ## License

@@ -30,13 +30,13 @@ class CacheEloquentTest extends TestCase
     protected function mockConnectionForModel($model, $database)
     {
         if ($database === 'Cache') {
-            $grammarClass   = Grammar::class;
+            $grammarClass = Grammar::class;
             $processorClass = Processor::class;
-            $grammar        = new $grammarClass();
-            $processor      = new $processorClass();
+            $grammar = new $grammarClass();
+            $processor = new $processorClass();
 
-            $connection     = m::mock('Illuminate\Database\ConnectionInterface', [
-                'getQueryGrammar'  => $grammar,
+            $connection = m::mock('Illuminate\Database\ConnectionInterface', [
+                'getQueryGrammar' => $grammar,
                 'getPostProcessor' => $processor,
             ]);
 
@@ -51,13 +51,13 @@ class CacheEloquentTest extends TestCase
             return;
         }
 
-        $grammarClass   = 'Illuminate\Database\Query\Grammars\\' . $database . 'Grammar';
-        $processorClass = 'Illuminate\Database\Query\Processors\\' . $database . 'Processor';
-        $grammar        = new $grammarClass();
-        $processor      = new $processorClass();
+        $grammarClass = 'Illuminate\Database\Query\Grammars\\'.$database.'Grammar';
+        $processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
+        $grammar = new $grammarClass();
+        $processor = new $processorClass();
 
-        $connection     = m::mock('Illuminate\Database\ConnectionInterface', [
-            'getQueryGrammar'  => $grammar,
+        $connection = m::mock('Illuminate\Database\ConnectionInterface', [
+            'getQueryGrammar' => $grammar,
             'getPostProcessor' => $processor,
         ]);
 
@@ -73,4 +73,5 @@ class CacheEloquentTest extends TestCase
 }
 
 class CacheEloquentStub extends Model
-{ }
+{
+}

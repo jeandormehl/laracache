@@ -23,7 +23,7 @@ class Grammar extends SqlServerGrammar
         }
 
         $components['columns'] = $this->compileOver($this->columnize($query->columns));
-        $sql                   = $this->concatenate($components);
+        $sql = $this->concatenate($components);
 
         return $this->compileTableExpression($sql, $query);
     }
@@ -39,7 +39,7 @@ class Grammar extends SqlServerGrammar
 
         return "select *, %vid from ({$sql}) where %vid {$constraint}";
     }
-    
+
      /**
      *
      *  This is a compatible method that usually worked with old version of SqlServerGramar.
@@ -48,23 +48,24 @@ class Grammar extends SqlServerGrammar
      *  https://github.com/laravel/framework/pull/39863 (see changed files)
      *
      *  Just copied over old method, before Laravel PR got merged.
-     * 
+     *
      **/
      public function compileSelect(Builder $query)
      {
          if (! $query->offset) {
-              return parent::compileSelect($query);
-          }
+             return parent::compileSelect($query);
+         }
 
-          // If an offset is present on the query, we will need to wrap the query in
-          // a big "ANSI" offset syntax block. This is very nasty compared to the
-          // other database systems but is necessary for implementing features.
-          if (is_null($query->columns)) {
-              $query->columns = ['*'];
-          }
+         // If an offset is present on the query, we will need to wrap the query in
+         // a big "ANSI" offset syntax block. This is very nasty compared to the
+         // other database systems but is necessary for implementing features.
+         if (is_null($query->columns)) {
+             $query->columns = ['*'];
+         }
 
-          return $this->compileAnsiOffset(
-              $query, $this->compileComponents($query)
-          );
-    }
+         return $this->compileAnsiOffset(
+             $query,
+             $this->compileComponents($query)
+         );
+     }
 }

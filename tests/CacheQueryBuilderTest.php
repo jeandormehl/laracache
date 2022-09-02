@@ -16,7 +16,7 @@ class CacheQueryBuilderTest extends TestCase
 
     protected function getBuilder()
     {
-        $grammar   = new Grammar();
+        $grammar = new Grammar();
         $processor = m::mock(Processor::class);
 
         return new Builder(
@@ -1125,7 +1125,7 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testMergeWheresCanMergeWheresAndBindings()
     {
-        $builder         = $this->getBuilder();
+        $builder = $this->getBuilder();
         $builder->wheres = ['foo'];
 
         $builder->mergeWheres(['wheres'], [12 => 'foo', 13 => 'bar']);
@@ -1145,11 +1145,11 @@ class CacheQueryBuilderTest extends TestCase
 
     public function testDynamicWhere()
     {
-        $method     = 'whereFooBarAndBazOrQux';
+        $method = 'whereFooBarAndBazOrQux';
         $parameters = ['corge', 'waldo', 'fred'];
-        $grammar    = new Grammar();
-        $processor  = m::mock(Processor::class);
-        $builder    = m::mock(
+        $grammar = new Grammar();
+        $processor = m::mock(Processor::class);
+        $builder = m::mock(
             'Illuminate\Database\Query\Builder[where]',
             [m::mock('Illuminate\Database\ConnectionInterface'), $grammar, $processor]
         );
