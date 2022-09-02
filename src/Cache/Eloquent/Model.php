@@ -11,7 +11,7 @@ class Model extends IlluminateModel
 {
     protected function newBaseQueryBuilder()
     {
-        $conn    = $this->getConnection();
+        $conn = $this->getConnection();
         $grammar = $conn->getQueryGrammar();
 
         if ($grammar instanceof Grammar) {

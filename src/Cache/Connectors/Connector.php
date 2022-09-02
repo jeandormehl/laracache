@@ -13,7 +13,7 @@ class Connector extends IlluminateConnector implements
     public function connect(array $config)
     {
         $options = $this->getOptions($config);
-        $dsn     = $this->buildDsn($config);
+        $dsn = $this->buildDsn($config);
 
         return $this->createConnection($dsn, $config, $options);
     }
@@ -40,16 +40,16 @@ class Connector extends IlluminateConnector implements
             || !$config['database']
         ) {
             throw new InvalidArgumentException(
-                'Invalid configuration. Driver path, host, port and namespace ' .
+                'Invalid configuration. Driver path, host, port and namespace '.
                 'are required.'
             );
         }
 
         // unix
-        $dsn  = 'Driver={' . $config['unix_driver'] . '};';
-        $dsn .= 'Server=' . $config['host'] . ';';
-        $dsn .= 'PORT=' . $config['port'] . ';';
-        $dsn .= 'DATABASE=' . $config['database'];
+        $dsn = 'Driver={'.$config['unix_driver'].'};';
+        $dsn .= 'Server='.$config['host'].';';
+        $dsn .= 'PORT='.$config['port'].';';
+        $dsn .= 'DATABASE='.$config['database'];
 
         return $dsn;
     }

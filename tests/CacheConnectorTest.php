@@ -15,16 +15,16 @@ class CacheConnectorTest extends TestCase
     public function testCreateConnection()
     {
         $connector = new CacheConnectorStub();
-        $dsn       = 'Connection String';
-        $config    = [
-            'driver'   => 'odbc',
-            'host'     => 'host',
+        $dsn = 'Connection String';
+        $config = [
+            'driver' => 'odbc',
+            'host' => 'host',
             'database' => 'database',
-            'port'     => 'port',
+            'port' => 'port',
             'username' => 'username',
             'password' => 'password',
-            'charset'  => 'charset',
-            'options'  => [],
+            'charset' => 'charset',
+            'options' => [],
         ];
 
         $pdo = $connector->createConnection($dsn, $config, []);

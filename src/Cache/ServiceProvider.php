@@ -16,7 +16,7 @@ class ServiceProvider extends IlluminateServiceProvider
         Model::setEventDispatcher($this->app['events']);
 
         $this->publishes([
-            __DIR__ . '/../../config/isc.php' => config_path('isc.php'),
+            __DIR__.'/../../config/isc.php' => config_path('isc.php'),
         ], 'isc');
     }
 
@@ -24,7 +24,7 @@ class ServiceProvider extends IlluminateServiceProvider
     {
         if (!\file_exists(config_path('isc.php'))) {
             $this->mergeConfigFrom(
-                __DIR__ . '/../../config/isc.php',
+                __DIR__.'/../../config/isc.php',
                 'database.connections'
             );
         } else {
@@ -38,7 +38,7 @@ class ServiceProvider extends IlluminateServiceProvider
             $config
         ) {
             $connector = new Connector();
-            $pdo       = $connector->connect($config);
+            $pdo = $connector->connect($config);
 
             return new Connection(
                 $pdo,
