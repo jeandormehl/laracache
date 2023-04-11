@@ -20,6 +20,8 @@ class Grammar extends SqlServerGrammar
 
         if (empty($components['orders'])) {
             $components['orders'] = 'order by 1';
+            $components['offset'] = null;
+            $components['limit'] = null;
         }
 
         $components['columns'] = $this->compileOver($this->columnize($query->columns));

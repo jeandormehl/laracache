@@ -17,17 +17,17 @@
         }
     ],
     "require": {
-        "php": "^8.0|^8.1",
-        "illuminate/database": "^8.0|^9.0|^10.0",
-        "illuminate/support": "^8.0|^9.0|^10.0"
+        "php": "^8.1|^8.2",
+        "illuminate/database": "^10.0",
+        "illuminate/support": "^10.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.11",
-        "mockery/mockery": "^1.4",
-        "nunomaduro/collision": "^6.3",
-        "orchestra/testbench": "^7.7",
-        "pestphp/pest": "^1.22",
-        "phpunit/phpunit": "^9.5"
+        "friendsofphp/php-cs-fixer": "^3.16",
+        "mockery/mockery": "^1.5",
+        "nunomaduro/collision": "7.4",
+        "orchestra/testbench": "^8.3",
+        "pestphp/pest": "^2.4",
+        "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
@@ -35,8 +35,8 @@
         }
     },
     "scripts": {
-        "test": "pest",
-        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage --coverage-clover=.coverage/clover.xml --coverage-html=.coverage",
+        "test": "pest --compact",
+        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage --compact",
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
         ]
