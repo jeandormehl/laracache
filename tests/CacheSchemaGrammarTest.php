@@ -26,7 +26,7 @@ class CacheSchemaGrammarTest extends TestCase
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
-            'create table users (id int identity primary key not null, email nvarchar(255) not null)',
+            'create table users (id int not null identity primary key, email nvarchar(255) not null)',
             $statements[0]
         );
     }
@@ -45,7 +45,7 @@ class CacheSchemaGrammarTest extends TestCase
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
-            'create table users (id int identity primary key not null, group nvarchar(255) not null)',
+            'create table users (id int not null identity primary key, group nvarchar(255) not null)',
             $statements[0]
         );
     }
@@ -158,7 +158,7 @@ class CacheSchemaGrammarTest extends TestCase
 
         $this->assertEquals(2, \count($statements));
         $this->assertEquals(
-            'alter table users add id int identity primary key not null, email nvarchar(255) not null',
+            'alter table users add id int not null identity primary key, email nvarchar(255) not null',
             $statements[0]
         );
         $this->assertEquals(
@@ -375,7 +375,7 @@ class CacheSchemaGrammarTest extends TestCase
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
-            'alter table users add foo bigint identity primary key not null',
+            'alter table users add foo bigint not null identity primary key',
             $statements[0]
         );
     }
@@ -400,7 +400,7 @@ class CacheSchemaGrammarTest extends TestCase
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
-            'alter table users add foo int identity primary key not null',
+            'alter table users add foo int not null identity primary key',
             $statements[0]
         );
     }
