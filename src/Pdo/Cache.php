@@ -35,18 +35,18 @@ class Cache extends PDO
     public function __construct($dsn, $username, $password, array $options = [])
     {
         if (\mb_substr($dsn, 0, 5) !== 'odbc:') {
-            $dsn = 'odbc:'.$dsn;
+            $dsn = 'odbc:' . $dsn;
         }
 
-        // must call pdo constructor - exception thrown
+        // must call PDO constructor - exception thrown
         parent::__construct($dsn, $username, $password, $options);
 
         $dsn = \preg_replace('/^odbc:/', '', $dsn);
         $this->options = $options;
 
-        $this->connect($dsn, $username, $password, $options);
+        // Rename connect() to initializeConnection()
+        $this->initializeConnection($dsn, $username, $password, $options);
     }
-
     /**
      * Prepares a statement for execution and returns a statement object.
      *
@@ -145,7 +145,22 @@ class Cache extends PDO
     /**
      * Connect to cache via odbc.
      */
-    private function connect($dsn, $username, $password, array $options)
+    /*     private function connect($dsn, $username, $password, array $options)
+    {
+        $this->dbh = (\array_key_exists(PDO::ATTR_PERSISTENT, $options)
+            && $options[PDO::ATTR_PERSISTENT])
+            ? @\odbc_pconnect($dsn, $username, $password)
+            : @\odbc_connect($dsn, $username, $password);
+
+        if (!$this->dbh) {
+            $this->throwException();
+        }
+    } */
+
+    /**
+     * Initialize connection to cache via ODBC.
+     */
+    private function initializeConnection($dsn, $username, $password, array $options)
     {
         $this->dbh = (\array_key_exists(PDO::ATTR_PERSISTENT, $options)
             && $options[PDO::ATTR_PERSISTENT])
