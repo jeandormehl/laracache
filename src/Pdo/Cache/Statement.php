@@ -109,6 +109,13 @@ class Statement extends PDOStatement
                     $resultSet = \array_change_key_case($resultSet);
                 }
 
+                // Apply iconv conversion to each string value
+                foreach ($resultSet as $key => $value) {
+                    if (is_string($value)) {
+                        $resultSet[$key] = iconv('Windows-1250', 'UTF-8', $value);
+                    }
+                }
+
                 return $resultSet;
 
             case PDO::FETCH_OBJ:
@@ -130,11 +137,16 @@ class Statement extends PDOStatement
 
                 foreach ($resultSet as $field => $value) {
                     if (\is_null($value) && $nullToString) {
-                        $resultSet[$field] = '';
+                        $value = '';
                     }
 
-                    if (empty($resultSet[$field]) && $nullEmptyString) {
-                        $resultSet[$field] = null;
+                    if (empty($value) && $nullEmptyString) {
+                        $value = null;
+                    }
+
+                    // Apply iconv conversion to each string value
+                    if (is_string($value)) {
+                        $value = iconv('Windows-1250', 'UTF-8', $value);
                     }
 
                     $object->{$field} = $value;
