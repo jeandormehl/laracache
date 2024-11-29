@@ -1,5 +1,5 @@
 {
-    "name": "jeandormehl/laracache",
+    "name": "filasik/laracache",
     "license": "MIT",
     "description": "InterSystems Caché provider for Laravel (ODBC)",
     "keywords": [
@@ -9,7 +9,7 @@
         "pdo",
         "odbc"
     ],
-    "homepage": "https://github.com/jeandormehl/laracache",
+    "homepage": "https://github.com/filasik/laracache",
     "authors": [
         {
             "name": "Jean Dormehl",
@@ -42,7 +42,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "mls-dev"
+            "dev-master": "mls"
         },
         "laravel": {
             "providers": [
