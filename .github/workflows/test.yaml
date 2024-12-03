@@ -8,19 +8,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [8.0, 8.1]
-        laravel: [8.*, 9.*]       
+        php: [8.3, 8.4]
+        laravel: [9.*, 10.*, 11.*]       
         stability: [prefer-lowest, prefer-stable]           
         include: 
-          - laravel: 8.*
-            testbench: 6.*
-            collision: 5.*
           - laravel: 9.*
             testbench: 7.*
             collision: 6.*
-        exclude:
-          - laravel: 8.*
-            stability: prefer-lowest     
+          - laravel: 10.*
+            testbench: 8.*
+            collision: 6.*
+          - laravel: 11.*
+            testbench: 9.*
+            collision: 8.*
                       
     steps:
       - name: Checkout code
