@@ -44,7 +44,7 @@ class Cache extends PDO
         $dsn = \preg_replace('/^odbc:/', '', $dsn);
         $this->options = $options;
 
-        $this->connect($dsn, $username, $password, $options);
+        $this->initializeConnection($dsn, $username, $password, $options);
     }
 
     /**
@@ -145,7 +145,7 @@ class Cache extends PDO
     /**
      * Connect to cache via odbc.
      */
-    private function connect($dsn, $username, $password, array $options)
+    private function initializeConnection($dsn, $username, $password, array $options)
     {
         $this->dbh = (\array_key_exists(PDO::ATTR_PERSISTENT, $options)
             && $options[PDO::ATTR_PERSISTENT])
