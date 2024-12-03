@@ -87,7 +87,9 @@ class Cache extends PDO
      */
     public function beginTransaction(): bool
     {
-        return $this->setAutoCommit(false);
+        $this->setAutoCommit(false);
+
+         return $this->exec('START TRANSACTION');
     }
 
     /**
@@ -97,6 +99,7 @@ class Cache extends PDO
      */
     public function commit(): bool
     {
+        $this->exec('COMMIT');
         $this->setAutoCommit(true);
 
         return (!\odbc_error($this->dbh))
@@ -111,6 +114,7 @@ class Cache extends PDO
      */
     public function rollBack(): bool
     {
+        $this->exec('ROLLBACK');
         $status = @\odbc_rollback($this->dbh);
 
         if (!$status) {
