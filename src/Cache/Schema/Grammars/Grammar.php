@@ -9,7 +9,7 @@ use Illuminate\Support\Fluent;
 
 class Grammar extends SqlServerGrammar
 {
-    public function compileTableExists()
+    public function compileTableExists($schema, $table)
     {
         $sql = 'select * from information_schema.tables where table_name = ?';
 

@@ -18,16 +18,16 @@
     ],
     "require": {
         "php": "^8.3|^8.4",
-        "illuminate/database": "^9.0|^10.0|^11.0",
-        "illuminate/support": "^9.0|^10.0|^11.0"
+        "illuminate/database": "^11.0",
+        "illuminate/support": "^11.0"
     },
     "require-dev": {
         "laravel/pint": "^1.18",
-        "mockery/mockery": "^1.4",
-        "nunomaduro/collision": "^6.0|^7.0|^8.0",
-        "orchestra/testbench": "^7.7",
-        "pestphp/pest": "^1.0|^2.0|^3.0",
-        "phpunit/phpunit": "^9.0|^10.0|^11.0"
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.5",
+        "orchestra/testbench": "^9.6",
+        "pestphp/pest": "^3.6",
+        "phpunit/phpunit": "^11.4"
     },
     "autoload": {
         "psr-4": {
@@ -35,8 +35,8 @@
         }
     },
     "scripts": {
-        "test": "pest",
-        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage",
+        "test": "pest --compact",
+        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage --compact",
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
         ]

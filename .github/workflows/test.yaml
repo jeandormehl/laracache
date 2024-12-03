@@ -8,25 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [8.3, 8.4]
-        laravel: [9.*, 10.*, 11.*]       
+        php: [8.2, 8.3, 8.4]
+        laravel: [11.*]       
         stability: [prefer-lowest, prefer-stable]           
         include: 
-          - laravel: 9.*
-            testbench: 7.*
-            collision: 6.*
-            phpunit: 9.*
-            pest: 1.*
-          - laravel: 10.*
-            testbench: 8.*
-            collision: 7.*
-            phpunit: 10.*
-            pest: 2.*
           - laravel: 11.*
             testbench: 9.*
             collision: 8.*
-            phpunit: 11.*
-            pest: 3.*            
                       
     steps:
       - name: Checkout code
@@ -46,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "pestphp/pest:${{ matrix.pest }}" "phpunit/phpunit:${{ matrix.phpunit }}" "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update --ansi
+          composer require "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update --ansi
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --ansi
 
       - name: Execute tests
