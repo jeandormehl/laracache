@@ -15,12 +15,15 @@ jobs:
           - laravel: 9.*
             testbench: 7.*
             collision: 6.*
+            pest: 1.*
           - laravel: 10.*
             testbench: 8.*
             collision: 6.*
+            pest: 2.*
           - laravel: 11.*
             testbench: 9.*
             collision: 8.*
+            pest: 3.*
                       
     steps:
       - name: Checkout code
@@ -40,7 +43,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update --ansi
+          composer require "pestphp/pest:${{ matrix.pest }}" "pestphp/pest:${{ matrix.pest }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update --ansi
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --ansi
 
       - name: Execute tests

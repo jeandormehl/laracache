@@ -35,8 +35,8 @@
         }
     },
     "scripts": {
-        "test": "pest --compact",
-        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage --compact",
+        "test": "pest",
+        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage",
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
         ]
