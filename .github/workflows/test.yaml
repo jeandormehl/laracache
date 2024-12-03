@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "pestphp/pest:${{ matrix.pest }}" "pestphp/pest:${{ matrix.pest }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update --ansi
+          composer require "pestphp/pest:${{ matrix.pest }}" "phpunit/phpunit:${{ matrix.phpunit }}" "orchestra/testbench:${{ matrix.testbench }}" "nunomaduro/collision:${{ matrix.collision }}" --dev --no-interaction --no-update --ansi
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --ansi
 
       - name: Execute tests
