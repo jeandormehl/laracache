@@ -19,9 +19,7 @@ class Grammar extends SqlServerGrammar
         }
 
         if (empty($components['orders'])) {
-            $components['orders'] = 'order by 1';
-            $components['offset'] = null;
-            $components['limit'] = null;
+            $components['orders'] = 'order by 1';            
         }
 
         $components['columns'] = $this->compileOver($this->columnize($query->columns));
@@ -46,6 +44,16 @@ class Grammar extends SqlServerGrammar
         }
 
         return ">= {$start}";
+    }
+
+    protected function compileOffset(Builder $query, $offset)
+    {    
+        return '';
+    }
+
+    protected function compileLimit(Builder $query, $limit)
+    {
+        return '';
     }
 
 
