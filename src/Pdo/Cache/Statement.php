@@ -40,12 +40,12 @@ class Statement extends PDOStatement
             $this->throwException();
         }
 
-        if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
-            throw new CacheException(
-                'Resource expected of type odbc result; '
-                .(string) \get_resource_type($this->statement).' received instead.'
-            );
-        }
+        // if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
+        //     throw new CacheException(
+        //         'Resource expected of type odbc result; '
+        //         .(string) \get_resource_type($this->statement).' received instead.'
+        //     );
+        // }
 
         $fetchMode = $connection->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
 
