@@ -109,13 +109,6 @@ class Statement extends PDOStatement
                     $resultSet = \array_change_key_case($resultSet);
                 }
 
-                // Apply iconv conversion to each string value
-                foreach ($resultSet as $key => $value) {
-                    if (is_string($value)) {
-                        $resultSet[$key] = iconv('Windows-1250', 'UTF-8', $value);
-                    }
-                }
-
                 return $resultSet;
 
             case PDO::FETCH_OBJ:
@@ -144,11 +137,6 @@ class Statement extends PDOStatement
                         $value = null;
                     }
 
-                    // Apply iconv conversion to each string value
-                    if (is_string($value)) {
-                        $value = iconv('Windows-1250', 'UTF-8', $value);
-                    }
-
                     $object->{$field} = $value;
                 }
 
@@ -175,8 +163,8 @@ class Statement extends PDOStatement
         while ($row = $this->fetch()) {
             $mangledObj = \get_mangled_object_vars($row);
 
-		    if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($mangledObj))) {
-			    $stmt = new self($this->connection, \reset($mangledObj), $this->options);
+            if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($mangledObj))) {
+                $stmt = new self($this->connection, \reset($mangledObj), $this->options);
                 $stmt->execute();
                 $stmt->setFetchMode($mode);
 
