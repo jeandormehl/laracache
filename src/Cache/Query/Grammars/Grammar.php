@@ -19,7 +19,7 @@ class Grammar extends SqlServerGrammar
         }
 
         if (empty($components['orders'])) {
-            $components['orders'] = 'order by 1';
+            $components['orders'] = 'order by 1';            
         }
 
         $components['columns'] = $this->compileOver($this->columnize($query->columns));
@@ -32,6 +32,30 @@ class Grammar extends SqlServerGrammar
     {
         return "select top all {$orderings}";
     }
+
+    protected function compileRowConstraint($query)
+    {
+        $start = (int) $query->offset + 1;
+
+        if ($query->limit > 0) {
+            $finish = (int) $query->offset + (int) $query->limit;
+
+            return "between {$start} and {$finish}";
+        }
+
+        return ">= {$start}";
+    }
+
+    protected function compileOffset(Builder $query, $offset)
+    {    
+        return '';
+    }
+
+    protected function compileLimit(Builder $query, $limit)
+    {
+        return '';
+    }
+
 
     protected function compileTableExpression($sql, $query)
     {

@@ -8,26 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [8.0, 8.1]
-        laravel: [8.*, 9.*]       
-        stability: [prefer-lowest, prefer-stable]           
+        php: [8.2, 8.3, 8.4]
+        laravel: [11.*]       
+        stability: [prefer-stable]           
         include: 
-          - laravel: 8.*
-            testbench: 6.*
-            collision: 5.*
-          - laravel: 9.*
-            testbench: 7.*
-            collision: 6.*
-        exclude:
-          - laravel: 8.*
-            stability: prefer-lowest     
+          - laravel: 11.*
+            testbench: 9.*
+            collision: 8.*
                       
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.composer/cache/files
           key: dependencies-composer-${{ hashFiles('composer.json') }}

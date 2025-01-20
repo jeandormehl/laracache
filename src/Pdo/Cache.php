@@ -44,7 +44,7 @@ class Cache extends PDO
         $dsn = \preg_replace('/^odbc:/', '', $dsn);
         $this->options = $options;
 
-        $this->connect($dsn, $username, $password, $options);
+        $this->initializeConnection($dsn, $username, $password, $options);
     }
 
     /**
@@ -87,7 +87,9 @@ class Cache extends PDO
      */
     public function beginTransaction(): bool
     {
-        return $this->setAutoCommit(false);
+        $this->setAutoCommit(false);
+
+         return $this->exec('START TRANSACTION');
     }
 
     /**
@@ -97,6 +99,7 @@ class Cache extends PDO
      */
     public function commit(): bool
     {
+        $this->exec('COMMIT');
         $this->setAutoCommit(true);
 
         return (!\odbc_error($this->dbh))
@@ -111,6 +114,7 @@ class Cache extends PDO
      */
     public function rollBack(): bool
     {
+        $this->exec('ROLLBACK');
         $status = @\odbc_rollback($this->dbh);
 
         if (!$status) {
@@ -145,7 +149,7 @@ class Cache extends PDO
     /**
      * Connect to cache via odbc.
      */
-    private function connect($dsn, $username, $password, array $options)
+    private function initializeConnection($dsn, $username, $password, array $options)
     {
         $this->dbh = (\array_key_exists(PDO::ATTR_PERSISTENT, $options)
             && $options[PDO::ATTR_PERSISTENT])

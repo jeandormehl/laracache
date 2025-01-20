@@ -40,12 +40,12 @@ class Statement extends PDOStatement
             $this->throwException();
         }
 
-        if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
-            throw new CacheException(
-                'Resource expected of type odbc result; '
-                .(string) \get_resource_type($this->statement).' received instead.'
-            );
-        }
+        // if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
+        //     throw new CacheException(
+        //         'Resource expected of type odbc result; '
+        //         .(string) \get_resource_type($this->statement).' received instead.'
+        //     );
+        // }
 
         $fetchMode = $connection->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
 
@@ -58,8 +58,6 @@ class Statement extends PDOStatement
      * Executes a prepared statement.
      *
      * @param array
-     *
-     * @return bool
      */
     public function execute($inputParameters = null): bool
     {
@@ -76,11 +74,9 @@ class Statement extends PDOStatement
     /**
      * Fetches the next row from a result set.
      *
-     * @param null|int $fetchMode
-     * @param int      $cursorOrientation
-     * @param int      $cursorOffset
-     *
-     * @return mixed
+     * @param  null|int  $fetchMode
+     * @param  int  $cursorOrientation
+     * @param  int  $cursorOffset
      */
     public function fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0): mixed
     {
@@ -126,7 +122,7 @@ class Statement extends PDOStatement
                     $resultSet = \array_change_key_case($resultSet);
                 }
 
-                $object = new stdClass();
+                $object = new stdClass;
 
                 foreach ($resultSet as $field => $value) {
                     if (\is_null($value) && $nullToString) {
@@ -149,13 +145,11 @@ class Statement extends PDOStatement
     /**
      * Returns an array containing all of the result set rows.
      *
-     * @param int   $fetchMode
-     * @param mixed $fetchArgument
-     * @param array $ctorArgs
-     *
-     * @return array
+     * @param  int  $fetchMode
+     * @param  mixed  $fetchArgument
+     * @param  array  $ctorArgs
      */
-    public function fetchAll(int $mode = PDO::FETCH_OBJ, mixed ...$args): array
+    public function fetchAll(int $mode = PDO::FETCH_OBJ, $fetch_argument = null, mixed ...$args): array
     {
         $this->setFetchMode($mode);
         $this->results = [];
@@ -163,8 +157,8 @@ class Statement extends PDOStatement
         while ($row = $this->fetch()) {
             $mangledObj = \get_mangled_object_vars($row);
 
-		    if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($mangledObj))) {
-			    $stmt = new self($this->connection, \reset($mangledObj), $this->options);
+            if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($mangledObj))) {
+                $stmt = new self($this->connection, \reset($mangledObj), $this->options);
                 $stmt->execute();
                 $stmt->setFetchMode($mode);
 
@@ -191,8 +185,6 @@ class Statement extends PDOStatement
 
     /**
      * ODBC row count.
-     *
-     * @return int
      */
     public function rowCount(): int
     {
@@ -201,10 +193,8 @@ class Statement extends PDOStatement
 
     /**
      * Set PDO fetch mode.
-     *
-     * @return bool
      */
-    public function setFetchMode(int $mode, mixed ...$args)
+    public function setFetchMode($mode, $className = null, ...$params): true
     {
         switch ($mode) {
             case PDO::FETCH_ASSOC:
@@ -236,7 +226,7 @@ class Statement extends PDOStatement
                 $parameters[$values[$count]] = null;
             }
 
-            ++$count;
+            $count++;
         }
 
         return $parameters;
