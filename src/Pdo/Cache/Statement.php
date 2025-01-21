@@ -40,12 +40,12 @@ class Statement extends PDOStatement
             $this->throwException();
         }
 
-        if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
+        /* if (\strtolower(\get_resource_type($this->statement)) !== 'odbc result') {
             throw new CacheException(
                 'Resource expected of type odbc result; '
                 .(string) \get_resource_type($this->statement).' received instead.'
             );
-        }
+        } */
 
         $fetchMode = $connection->getAttribute(PDO::ATTR_DEFAULT_FETCH_MODE);
 
@@ -130,11 +130,11 @@ class Statement extends PDOStatement
 
                 foreach ($resultSet as $field => $value) {
                     if (\is_null($value) && $nullToString) {
-                        $resultSet[$field] = '';
+                        $value = '';
                     }
 
-                    if (empty($resultSet[$field]) && $nullEmptyString) {
-                        $resultSet[$field] = null;
+                    if (empty($value) && $nullEmptyString) {
+                        $value = null;
                     }
 
                     $object->{$field} = $value;
@@ -163,8 +163,8 @@ class Statement extends PDOStatement
         while ($row = $this->fetch()) {
             $mangledObj = \get_mangled_object_vars($row);
 
-		    if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($mangledObj))) {
-			    $stmt = new self($this->connection, \reset($mangledObj), $this->options);
+            if ((\is_array($row) || \is_object($row)) && \is_resource(\reset($mangledObj))) {
+                $stmt = new self($this->connection, \reset($mangledObj), $this->options);
                 $stmt->execute();
                 $stmt->setFetchMode($mode);
 
