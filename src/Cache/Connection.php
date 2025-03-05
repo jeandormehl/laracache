@@ -24,8 +24,8 @@ class Connection extends IlluminateConnection
         $queryGrammar = $this->getConfig('options.grammar.query');
 
         return ($queryGrammar)
-            ? new $queryGrammar()
-            : new QueryGrammar();
+            ? new $queryGrammar($this)
+            : new QueryGrammar($this);
     }
 
     public function getDefaultSchemaGrammar()
