@@ -4,9 +4,22 @@ namespace Laracache\Cache\Query\Grammars;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\SqlServerGrammar;
-
+use Illuminate\Database\Connection;
 class Grammar extends SqlServerGrammar
 {
+
+    /**
+     * Create a new grammar instance.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return void
+     */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+
     protected function wrapValue($value)
     {
         return $value;
