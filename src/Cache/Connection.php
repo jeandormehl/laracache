@@ -25,7 +25,7 @@ class Connection extends IlluminateConnection
 
         return ($queryGrammar)
             ? new $queryGrammar()
-            : new QueryGrammar();
+            : new QueryGrammar($this);
     }
 
     public function getDefaultSchemaGrammar()
