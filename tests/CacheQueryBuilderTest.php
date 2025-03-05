@@ -583,6 +583,18 @@ class CacheQueryBuilderTest extends TestCase
         );
     }
 
+    public function testOffsetAndOrderByTakeOffset()
+    {
+        $builder = $this->getBuilder();
+
+        $builder->select('*')->from('users')->orderBy('age')->take(4)->offset(10);
+
+        $this->assertEquals(
+            'select *, %vid from (select top all * from users order by age asc) where %vid between 11 and 14',
+            $builder->toSql()
+        );
+    }
+
     public function testOffsetWithCustomSelect()
     {
         $builder = $this->getBuilder();

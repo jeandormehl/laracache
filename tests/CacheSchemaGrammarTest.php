@@ -135,13 +135,13 @@ class CacheSchemaGrammarTest extends TestCase
         $conn = $this->getConnection();
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
-        $this->assertEquals(2, \count($statements));
+        $this->assertEquals(3, \count($statements));
         $this->assertEquals(
-            'alter table users add id int not null, email nvarchar(255) not null',
+            'alter table users add id int not null',
             $statements[0]
         );
         $this->assertEquals(
-            'alter table users add constraint users_id_primary primary key (id)',
+            'alter table users add email nvarchar(255) not null',
             $statements[1]
         );
     }
@@ -156,13 +156,13 @@ class CacheSchemaGrammarTest extends TestCase
 
         $statements = $blueprint->toSql($conn, $this->getGrammar());
 
-        $this->assertEquals(2, \count($statements));
+        $this->assertEquals(3, \count($statements));
         $this->assertEquals(
-            'alter table users add id int not null identity primary key, email nvarchar(255) not null',
+            'alter table users add id int not null identity',
             $statements[0]
         );
         $this->assertEquals(
-            'alter table users add constraint users_id_primary primary key (id)',
+            'alter table users add email nvarchar(255) not null',
             $statements[1]
         );
     }
@@ -435,7 +435,7 @@ class CacheSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
         $this->assertEquals(1, \count($statements));
-        $this->assertEquals('alter table users add foo float not null', $statements[0]);
+        $this->assertEquals('alter table users add foo float(5) not null', $statements[0]);
     }
 
     public function testAddingDouble()
@@ -446,7 +446,7 @@ class CacheSchemaGrammarTest extends TestCase
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
         $this->assertEquals(1, \count($statements));
-        $this->assertEquals('alter table users add foo float not null', $statements[0]);
+        $this->assertEquals('alter table users add foo double precision not null', $statements[0]);
     }
 
     public function testAddingDecimal()
@@ -564,9 +564,9 @@ class CacheSchemaGrammarTest extends TestCase
 
         $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
 
-        $this->assertEquals(1, \count($statements));
+        $this->assertEquals(2, \count($statements));
         $this->assertEquals(
-            'alter table users add created_at datetime null, updated_at datetime null',
+            'alter table users add created_at datetime null',
             $statements[0]
         );
     }

@@ -4,23 +4,19 @@
 	"workspaceFolder": "/var/www/app",
 	"workspaceMount": "source=${localWorkspaceFolder},target=/var/www/app,type=bind",
 	"build": {
-		"dockerfile": "Dockerfile"	
-	},	
-	"settings": {
-		"terminal.integrated.defaultProfile.linux": "zsh",
-		"[php]": {
-			"editor.defaultFormatter": "junstyle.php-cs-fixer",
-			"editor.formatOnSave": true
-		},
-		"php-cs-fixer.executablePath": "/var/www/app/vendor/bin/php-cs-fixer",
-		"php-cs-fixer.config": "/var/www/app/.php-cs-fixer.php",
-		"php-cs-fixer.onsave": true
+		"dockerfile": "Dockerfile"
 	},
-	"remoteEnv": {
-		"PHP_CS_FIXER_IGNORE_ENV": "1"
-	},
-	"extensions": [
-		"bmewburn.vscode-intelephense-client",
-		"junstyle.php-cs-fixer"
-	]
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh",
+				"[php]": {
+					"editor.formatOnSave": true
+				}
+			},
+			"extensions": [
+				"bmewburn.vscode-intelephense-client"
+			]
+		}
+	}
 }
