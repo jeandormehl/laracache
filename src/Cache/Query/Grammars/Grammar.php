@@ -20,7 +20,7 @@ class Grammar extends SqlServerGrammar
     }
 
 
-    protected function wrapValue($value)
+    protected function wrapValue($value, $prefix = null)
     {
         return $value;
     }
