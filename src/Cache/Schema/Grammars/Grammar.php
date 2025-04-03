@@ -28,7 +28,7 @@ class Grammar extends SqlServerGrammar
             : '';
     }
 
-    public function wrapTable($table)
+    public function wrapTable($table, $prefix = null)
     {
         return $table instanceof Blueprint ? $table->getTable() : $table;
     }
