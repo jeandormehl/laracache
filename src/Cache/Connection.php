@@ -33,8 +33,8 @@ class Connection extends IlluminateConnection
         $schemaGrammar = $this->getConfig('options.grammar.schema');
 
         return ($schemaGrammar)
-            ? new $schemaGrammar()
-            : new SchemaGrammar();
+            ? new $schemaGrammar($this)
+            : new SchemaGrammar($this);
     }
 
     public function getSchemaBuilder()
@@ -47,7 +47,7 @@ class Connection extends IlluminateConnection
         $processor = $this->getConfig('options.processor');
 
         return ($processor)
-            ? new $processor()
-            : new Processor();
+            ? new $processor($this)
+            : new Processor($this);
     }
 }
