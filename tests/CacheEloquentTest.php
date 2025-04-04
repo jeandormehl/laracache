@@ -32,13 +32,12 @@ class CacheEloquentTest extends TestCase
         if ($database === 'Cache') {
             $grammarClass = Grammar::class;
             $processorClass = Processor::class;
-            $grammar = new $grammarClass();
+            $connection = m::mock('Illuminate\Database\Connection');
+            $grammar = new $grammarClass($connection);
             $processor = new $processorClass();
 
-            $connection = m::mock('Illuminate\Database\ConnectionInterface', [
-                'getQueryGrammar' => $grammar,
-                'getPostProcessor' => $processor,
-            ]);
+            $connection->shouldReceive('getQueryGrammar')->andReturn($grammar);
+            $connection->shouldReceive('getPostProcessor')->andReturn($processor);
 
             $resolver = m::mock(
                 'Illuminate\Database\ConnectionResolverInterface',

@@ -16,7 +16,8 @@ class CacheQueryBuilderTest extends TestCase
 
     protected function getBuilder()
     {
-        $grammar = new Grammar();
+        $connection = m::mock('Illuminate\Database\Connection');
+        $grammar = new Grammar($connection);
         $processor = m::mock(Processor::class);
 
         return new Builder(
@@ -1159,7 +1160,8 @@ class CacheQueryBuilderTest extends TestCase
     {
         $method = 'whereFooBarAndBazOrQux';
         $parameters = ['corge', 'waldo', 'fred'];
-        $grammar = new Grammar();
+        $connection = m::mock('Illuminate\Database\Connection');
+        $grammar = new Grammar($connection);
         $processor = m::mock(Processor::class);
         $builder = m::mock(
             'Illuminate\Database\Query\Builder[where]',
