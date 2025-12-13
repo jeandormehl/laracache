@@ -17,7 +17,6 @@ jobs:
             collision: 8.*
           - laravel: 12.*
             testbench: 10.*
-            collision: 9.*
 
     steps:
       - name: Checkout code
