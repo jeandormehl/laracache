@@ -7,7 +7,16 @@ use Laracache\Pdo\Cache\Statement;
 use PDO;
 use PDOStatement;
 
-class Cache extends PDO
+/**
+ * Previously, this classe extend from PDO, but that didn't used any PDO functionality.
+ * Since version 1 this package uses `odbc_xxxx` functions directly even extending from PDO.
+ *
+ * Starting in PHP 8.4.11+ and unixODBC 2.13.12+, an issue was introduced that causes `segmentation fault` errors when using PDO.
+ * So, we had to move away from extending PDO and use odbc functions directly.
+ *
+ * If in future versions of PHP and/or unixODBC this issue is resolved, we can consider going back to extending PDO, to make it more standard.
+ */
+class Cache
 {
     /**
      * @var resource
@@ -34,14 +43,6 @@ class Cache extends PDO
      */
     public function __construct($dsn, $username, $password, array $options = [])
     {
-        if (\mb_substr($dsn, 0, 5) !== 'odbc:') {
-            $dsn = 'odbc:'.$dsn;
-        }
-
-        // must call pdo constructor - exception thrown
-        parent::__construct($dsn, $username, $password, $options);
-
-        $dsn = \preg_replace('/^odbc:/', '', $dsn);
         $this->options = $options;
 
         $this->initializeConnection($dsn, $username, $password, $options);
@@ -89,7 +90,7 @@ class Cache extends PDO
     {
         $this->setAutoCommit(false);
 
-         return $this->exec('START TRANSACTION');
+        return $this->exec('START TRANSACTION');
     }
 
     /**
@@ -173,8 +174,8 @@ class Cache extends PDO
     }
 
     /**
-    * Required quote function.
-    */
+     * Required quote function.
+     */
     public function quote(string $string, int $type = PDO::PARAM_STR): string|false
     {
         return $string;
@@ -188,5 +189,13 @@ class Cache extends PDO
     private function throwException()
     {
         throw new CacheException(\odbc_errormsg(), (int) \odbc_error());
+    }
+
+    /**
+     * Get a specific attribute from the fake `PDO` options.
+     */
+    public function getAttribute(mixed $attribute): mixed
+    {
+        return $this->options[$attribute] ?? null;
     }
 }

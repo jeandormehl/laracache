@@ -4,18 +4,21 @@ on: [push, pull_request]
 
 jobs:
   build-and-test:
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} 
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [8.2, 8.3, 8.4]
-        laravel: [11.*]       
-        stability: [prefer-stable]           
-        include: 
+        php: [8.4, 8.5]
+        laravel: [11.*, 12.*]
+        stability: [prefer-stable]
+        include:
           - laravel: 11.*
             testbench: 9.*
             collision: 8.*
-                      
+          - laravel: 12.*
+            testbench: 10.*
+            collision: 9.*
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -45,4 +48,4 @@ jobs:
         with:
           token: ${{ secrets.CODE_COV_TOKEN }}
           files: .coverage/clover.xml
-          verbose: true  
+          verbose: true
