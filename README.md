@@ -19,6 +19,8 @@ PHP >= 8.5 and Laravel >= 12
 composer require jeandormehl/laracache
 ```
 
+🚨 For older versions check the releases page.
+
 ## Environment variables
 
 Modify your` .env` file to look similar to this.
