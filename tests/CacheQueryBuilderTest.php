@@ -16,7 +16,7 @@ class CacheQueryBuilderTest extends TestCase
 
     protected function getBuilder()
     {
-        $grammar = new Grammar();
+        $grammar = new Grammar($this->getConnection());
         $processor = m::mock(Processor::class);
 
         return new Builder(
@@ -1159,7 +1159,7 @@ class CacheQueryBuilderTest extends TestCase
     {
         $method = 'whereFooBarAndBazOrQux';
         $parameters = ['corge', 'waldo', 'fred'];
-        $grammar = new Grammar();
+        $grammar = new Grammar($this->getConnection());
         $processor = m::mock(Processor::class);
         $builder = m::mock(
             'Illuminate\Database\Query\Builder[where]',
@@ -1171,5 +1171,17 @@ class CacheQueryBuilderTest extends TestCase
         $builder->shouldReceive('where')->with('qux', '=', $parameters[2], 'or')->once()->andReturn($builder);
 
         $this->assertEquals($builder, $builder->dynamicWhere($method, $parameters));
+    }
+
+    protected function getConnection()
+    {
+        $connection =  m::mock('Illuminate\Database\Connection');
+
+        $connection->shouldReceive('getSchemaGrammar')->andReturn(new Grammar($connection));
+        $connection->shouldReceive('getSchemaBuilder')->andReturn(Builder::class);
+        $connection->shouldReceive('getConfig')->with('prefix_indexes')->andReturn(true);
+        $connection->shouldReceive('getTablePrefix')->andReturn('');
+
+        return $connection;
     }
 }

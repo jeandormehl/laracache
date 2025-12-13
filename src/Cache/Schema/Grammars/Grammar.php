@@ -15,7 +15,7 @@ class Grammar extends SqlServerGrammar
 
         if (config('database.connections.odbc.schema')) {
             $sql .= ' and table_schema = \''
-                .config('database.connections.odbc.schema').'\'';
+                . config('database.connections.odbc.schema') . '\'';
         }
 
         return $sql;
@@ -28,7 +28,7 @@ class Grammar extends SqlServerGrammar
             : '';
     }
 
-    public function wrapTable($table)
+    public function wrapTable($table, $prefix = null)
     {
         return $table instanceof Blueprint ? $table->getTable() : $table;
     }

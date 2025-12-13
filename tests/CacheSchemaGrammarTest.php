@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
+use Laracache\Cache\Query\Builder;
 use Laracache\Cache\Schema\Grammars\Grammar;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
@@ -14,15 +15,13 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicCreateTable()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
 
         $blueprint->create();
         $blueprint->increments('id');
         $blueprint->string('email');
 
-        $conn = $this->getConnection();
-
-        $statements = $blueprint->toSql($conn, $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -33,15 +32,13 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicCreateTableWithReservedWords()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
 
         $blueprint->create();
         $blueprint->increments('id');
         $blueprint->string('group');
 
-        $conn = $this->getConnection();
-
-        $statements = $blueprint->toSql($conn, $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -52,15 +49,13 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicCreateTableWithPrimary()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
 
         $blueprint->create();
         $blueprint->integer('id')->primary();
         $blueprint->string('email');
 
-        $conn = $this->getConnection();
-
-        $statements = $blueprint->toSql($conn, $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(2, \count($statements));
         $this->assertEquals(
@@ -75,7 +70,7 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicCreateTableWithPrimaryAndForeignKeys()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
 
         $blueprint->create();
         $blueprint->integer('id')->primary();
@@ -83,10 +78,7 @@ class CacheSchemaGrammarTest extends TestCase
         $blueprint->integer('foo_id');
         $blueprint->foreign('foo_id')->references('id')->on('orders');
 
-        $grammar = $this->getGrammar();
-        $conn = $this->getConnection();
-
-        $statements = $blueprint->toSql($conn, $grammar);
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(3, \count($statements));
         $this->assertEquals(
@@ -105,14 +97,12 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicCreateTableWithDefaultValueAndIsNotNull()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->create();
         $blueprint->integer('id')->primary();
         $blueprint->string('email')->default('user@test.com');
 
-        $conn = $this->getConnection();
-
-        $statements = $blueprint->toSql($conn, $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(2, \count($statements));
         $this->assertEquals(
@@ -127,13 +117,11 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicAlterTable()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->integer('id');
         $blueprint->string('email');
         $blueprint->primary('id');
-
-        $conn = $this->getConnection();
-        $statements = $blueprint->toSql($conn, $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(3, \count($statements));
         $this->assertEquals(
@@ -148,13 +136,11 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testBasicAlterTableWithPrimary()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->increments('id')->primary();
         $blueprint->string('email');
 
-        $conn = $this->getConnection();
-
-        $statements = $blueprint->toSql($conn, $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(3, \count($statements));
         $this->assertEquals(
@@ -169,10 +155,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testDropTable()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->drop();
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('drop table users', $statements[0]);
@@ -186,10 +172,10 @@ class CacheSchemaGrammarTest extends TestCase
          * $blueprint->dropColumn('foo');
          * $blueprint->dropColumn('bar');
          */
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->dropColumn('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertStringContainsString('alter table users drop column foo', $statements[0]);
@@ -197,10 +183,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testDropPrimary()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->dropPrimary('foo_id_primary'); // name of constraints / index
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -211,10 +197,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testDropUnique()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->dropUnique('users_foo_unique'); // name of constraints / index
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -225,10 +211,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testDropIndex()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->dropIndex('users_foo_index');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('drop index users_foo_index on users', $statements[0]);
@@ -236,10 +222,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testDropForeign()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->dropForeign('users_foo_foreign');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -250,13 +236,13 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingForeignKeyWithCascadeDelete()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->foreign('foo')
             ->references('id')
             ->on('orders')
             ->onDelete('cascade');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -267,10 +253,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingString()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->string('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -278,10 +264,10 @@ class CacheSchemaGrammarTest extends TestCase
             $statements[0]
         );
 
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->string('foo', 100);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -289,12 +275,12 @@ class CacheSchemaGrammarTest extends TestCase
             $statements[0]
         );
 
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->string('foo', 100)
             ->nullable()
             ->default('bar');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -302,12 +288,12 @@ class CacheSchemaGrammarTest extends TestCase
             $statements[0]
         );
 
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->string('foo', 100)
             ->nullable()
             ->default(new Illuminate\Database\Query\Expression('CURRENT_TIMESTAMP'));
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -318,10 +304,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingLongTextMediumTextText()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->longText('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -332,10 +318,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingChar()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->char('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -343,10 +329,10 @@ class CacheSchemaGrammarTest extends TestCase
             $statements[0]
         );
 
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->char('foo', 1);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -357,10 +343,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingBigInteger()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->bigInteger('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -368,10 +354,10 @@ class CacheSchemaGrammarTest extends TestCase
             $statements[0]
         );
 
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->bigInteger('foo', true);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -382,10 +368,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingInteger()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->integer('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -393,10 +379,10 @@ class CacheSchemaGrammarTest extends TestCase
             $statements[0]
         );
 
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->integer('foo', true);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -407,10 +393,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingMediumInteger()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->mediumInteger('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo int not null', $statements[0]);
@@ -418,10 +404,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingTinyInteger()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->tinyInteger('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo tinyint not null', $statements[0]);
@@ -429,10 +415,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingFloat()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->float('foo', 5, 2);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo float(5) not null', $statements[0]);
@@ -440,10 +426,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingDouble()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->double('foo', 5, 2);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo double precision not null', $statements[0]);
@@ -451,10 +437,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingDecimal()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->decimal('foo', 5, 2);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo decimal(5, 2) not null', $statements[0]);
@@ -462,10 +448,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingBoolean()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->boolean('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo bit not null', $statements[0]);
@@ -473,10 +459,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingEnum()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->enum('foo', ['bar', 'baz']);
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -487,10 +473,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingJson()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->json('fooj');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertCount(1, $statements);
         $this->assertEquals(
@@ -501,10 +487,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingJsonb()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->jsonb('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertCount(1, $statements);
         $this->assertEquals(
@@ -515,10 +501,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingDate()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->date('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo date not null', $statements[0]);
@@ -526,10 +512,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingDateTime()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->dateTime('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo datetime not null', $statements[0]);
@@ -537,10 +523,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingTime()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->time('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo time not null', $statements[0]);
@@ -548,10 +534,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingTimeStamp()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->timestamp('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals('alter table users add foo datetime not null', $statements[0]);
@@ -559,10 +545,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingNullableTimeStamps()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->nullableTimestamps();
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(2, \count($statements));
         $this->assertEquals(
@@ -573,10 +559,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingUuid()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->uuid('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertCount(1, $statements);
         $this->assertEquals('alter table users add foo uniqueidentifier not null', $statements[0]);
@@ -584,10 +570,10 @@ class CacheSchemaGrammarTest extends TestCase
 
     public function testAddingBinary()
     {
-        $blueprint = new Blueprint('users');
+        $blueprint = new Blueprint($this->getConnection(), 'users');
         $blueprint->binary('foo');
 
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql();
 
         $this->assertEquals(1, \count($statements));
         $this->assertEquals(
@@ -596,13 +582,15 @@ class CacheSchemaGrammarTest extends TestCase
         );
     }
 
-    public function getGrammar()
-    {
-        return new Grammar();
-    }
-
     protected function getConnection()
     {
-        return m::mock('Illuminate\Database\Connection');
+        $connection =  m::mock('Illuminate\Database\Connection');
+
+        $connection->shouldReceive('getSchemaGrammar')->andReturn(new Grammar($connection));
+        $connection->shouldReceive('getSchemaBuilder')->andReturn(Builder::class);
+        $connection->shouldReceive('getConfig')->with('prefix_indexes')->andReturn(true);
+        $connection->shouldReceive('getTablePrefix')->andReturn('');
+
+        return $connection;
     }
 }

@@ -27,12 +27,24 @@ class CacheEloquentTest extends TestCase
         $this->assertInstanceOf(Processor::class, $builder->getProcessor());
     }
 
+    protected function getConnection()
+    {
+        $connection =  m::mock('Illuminate\Database\Connection');
+
+        $connection->shouldReceive('getSchemaGrammar')->andReturn(new Grammar($connection));
+        $connection->shouldReceive('getSchemaBuilder')->andReturn(Builder::class);
+        $connection->shouldReceive('getConfig')->with('prefix_indexes')->andReturn(true);
+        $connection->shouldReceive('getTablePrefix')->andReturn('');
+
+        return $connection;
+    }
+
     protected function mockConnectionForModel($model, $database)
     {
         if ($database === 'Cache') {
             $grammarClass = Grammar::class;
             $processorClass = Processor::class;
-            $grammar = new $grammarClass();
+            $grammar = new $grammarClass($this->getConnection());
             $processor = new $processorClass();
 
             $connection = m::mock('Illuminate\Database\ConnectionInterface', [
@@ -51,8 +63,8 @@ class CacheEloquentTest extends TestCase
             return;
         }
 
-        $grammarClass = 'Illuminate\Database\Query\Grammars\\'.$database.'Grammar';
-        $processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
+        $grammarClass = 'Illuminate\Database\Query\Grammars\\' . $database . 'Grammar';
+        $processorClass = 'Illuminate\Database\Query\Processors\\' . $database . 'Processor';
         $grammar = new $grammarClass();
         $processor = new $processorClass();
 
@@ -72,6 +84,4 @@ class CacheEloquentTest extends TestCase
     }
 }
 
-class CacheEloquentStub extends Model
-{
-}
+class CacheEloquentStub extends Model {}
