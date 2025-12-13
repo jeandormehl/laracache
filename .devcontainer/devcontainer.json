@@ -1,8 +1,5 @@
 {
 	"name": "Laracache",
-	"remoteUser": "appuser",
-	"workspaceFolder": "/var/www/app",
-	"workspaceMount": "source=${localWorkspaceFolder},target=/var/www/app,type=bind",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
