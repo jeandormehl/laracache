@@ -17,17 +17,17 @@
         }
     ],
     "require": {
-        "php": "^8.2|^8.3|^8.4",
-        "illuminate/database": "^11.0|^12.0",
-        "illuminate/support": "^11.0|^12.0"
+        "php": "^8.5",
+        "illuminate/database": "^12.0",
+        "illuminate/support": "^12.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.18",
+        "laravel/pint": "^1.26",
         "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.5",
-        "orchestra/testbench": "^9.6",
-        "pestphp/pest": "^3.6",
-        "phpunit/phpunit": "^11.4"
+        "nunomaduro/collision": "^8.8",
+        "orchestra/testbench": "^10.8",
+        "pestphp/pest": "^4.1",
+        "phpunit/phpunit": "^12.3"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +35,7 @@
         }
     },
     "scripts": {
-        "test": "pest --compact",
+        "test": "pest --compact --no-coverage",
         "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage --compact",
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"

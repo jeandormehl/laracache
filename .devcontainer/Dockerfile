@@ -1,3 +1,3 @@
-FROM robsontenorio/laravel
+FROM robsontenorio/laravel:sideup
 
 
